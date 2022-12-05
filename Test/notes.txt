@@ -1,0 +1,6 @@
+- alt + shift + F: format code
+
+- export data: https://zditect.com/code/php/the-ultimate-guide-to-web-scraping-with-php.html
+- thông báo: https://www.niemvuilaptrinh.com/article/27-vi-du-tao-thong-bao-html
+
+- khác: https://simplehtmldom.sourceforge.io/docs/1.9/index.html
