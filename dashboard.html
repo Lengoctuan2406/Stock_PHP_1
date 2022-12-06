@@ -22,7 +22,6 @@
 
   <link href="assets/css/style.css" rel="stylesheet">
 </head>
-
 <body style="background-image: url('assets/img/city_background_1.jpg'); ; background-size: cover">
   <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
@@ -57,7 +56,7 @@
               <hr class="dropdown-divider">
             </li>
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <a class="dropdown-item d-flex align-items-center" href="profile.html">
                 <i class="bi bi-person"></i>
                 <span>My Profile</span>
               </a>
@@ -84,7 +83,6 @@
           <span>Dashboard</span>
         </a>
       </li>
-      <!-- Xem thông tin cơ bản của mã chứng khoáng -->
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#information-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-clipboard-plus"></i><span>Information</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -107,6 +105,75 @@
           </li>
         </ul>
       </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#financial-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-newspaper"></i><span>Financial report</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="financial-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="financial.html">
+                        <i class="bi bi-circle"></i><span>See all</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="financial-update.html">
+                        <i class="bi bi-circle"></i><span>Update financial report</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="financial-add.html">
+                        <i class="bi bi-circle"></i><span>Add financial report</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#report-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
+                <i class="bi bi-bar-chart"></i><span>Charts</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="report-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav" style="">
+                <li>
+                    <a href="charts-line.html">
+                        <i class="bi bi-circle"></i><span>Line charts</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="charts-bar.html">
+                        <i class="bi bi-circle"></i><span>Bar charts</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="charts-column.html">
+                        <i class="bi bi-circle"></i><span>Column charts</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="charts-radar.html">
+                        <i class="bi bi-circle"></i><span>Radar charts</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="charts-pie.html">
+                        <i class="bi bi-circle"></i><span>Pie charts</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#ml-nav" data-bs-toggle="collapse" href="#" aria-expanded="false">
+                <i class="bi bi-graph-up"></i><span>Machine learning</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="ml-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav" style="">
+                <li>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>Line charts</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
+
 
 
       <li class="nav-item">
