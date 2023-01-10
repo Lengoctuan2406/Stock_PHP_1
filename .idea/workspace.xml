@@ -41,11 +41,11 @@
       <recent name="C:\wamp64\www\Stock_market_PHP_1\others" />
     </key>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.index.html">
-    <configuration name="financial-update.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Stock_market_PHP_1/others/pages/financial-update.html" useBuiltInWebServerPort="true">
+  <component name="RunManager" selected="PHP Script.index.php">
+    <configuration name="financial.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Stock_market_PHP_1/others/pages/financial.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
-    <configuration name="financial.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Stock_market_PHP_1/others/pages/financial.html" useBuiltInWebServerPort="true">
+    <configuration name="index.html (1)" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Stock_market_PHP_1/others/test/NiceAdmin-banquyen/index.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
     <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Stock_market_PHP_1/index.html" useBuiltInWebServerPort="true">
@@ -54,16 +54,16 @@
     <configuration name="profile.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Stock_market_PHP_1/others/pages/profile.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
-    <configuration name="_handling.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/_handling/_handling.php">
+    <configuration name="index.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/index.php">
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="PHP Script.index.php" />
+        <item itemvalue="JavaScript Debug.index.html (1)" />
         <item itemvalue="JavaScript Debug.index.html" />
         <item itemvalue="JavaScript Debug.financial.html" />
         <item itemvalue="JavaScript Debug.profile.html" />
-        <item itemvalue="PHP Script._handling.php" />
-        <item itemvalue="JavaScript Debug.financial-update.html" />
       </list>
     </recent_temporary>
   </component>
@@ -80,6 +80,7 @@
       <workItem from="1670328123746" duration="48000" />
       <workItem from="1673335870297" duration="670000" />
       <workItem from="1673345529914" duration="5528000" />
+      <workItem from="1673356728660" duration="10161000" />
     </task>
     <servers />
   </component>

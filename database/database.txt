@@ -1,9 +1,49 @@
 Table enterprises {
-  	enterprise_id int pk
-  	enterprise_code varchar
-  	enterprise_name varchar
+  	enterprise_id varchar 50 pk
+  	enterprise_code varchar 20
+  	enterprise_name tinytext
+  	enterprise_nam_thanh_lap varchar 50
+  	enterprise_von_dieu_le varchar 50
+  	enterprise_so_luong_nhan_su varchar 50
+    enterprise_so_luong_chi_nhanh varchar 50
+    enterprise_so_luong_cong_ty_con_lien_ket varchar 50
+    enterprise_ngay_niem_yet varchar 50
+    enterprise_noi_niem_yet tinytext
+    enterprise_gia_chao_san varchar 50
+    enterprise_gia_ngay_giao_dich_dau_tien varchar 50
+    enterprise_ngay_phat_hanh_cuoi varchar 50
+    enterprise_khoi_luong_niem_yet_lan_dau varchar 50
+    enterprise_khoi_luong_dang_niem_yet varchar 50
+    enterprise_khoi_luong_co_phieu_dang_luu_hanh varchar 50
+    enterprise_tong_quan mediumtext
 }
 
 Table financial_reports {
-  	financial_report_id int pk
+  	financial_report_id varchar 50 pk
+  	enterprise_id varchar 50 pk
+  	financial_type varchar 20 //congtyme, congtycon, hopnhat
+  	financial_year int 11
+  	financial_quarter int 11
+
+    financial_doanh_thu_thuan float
+    financial_loi_nhuan_gop float
+    financial_loi_nhuan_thuan_tu_hoat_dong_kinh_doanh float
+    financial_loi_nhuan_sau_thue_thu_nhap_doanh_nghiep float
+    financial_loi_nhuan_sau_thue_cua_co_dong_cong_ty_me float
+
+    financial_tai_san_ngan_han float
+    financial_tong_tai_san float
+    financial_no_phai_tra float
+    financial_no_ngan_han float
+    financial_von_chu_so_huu float
+
+    financial_eps_4_quy_gan_nhat float
+    financial_bvps_co_ban float
+    financial_pe_co_ban float
+    financial_ros_co_ban float
+    financial_roea float
+    financial_roaa float
 }
+
+https://finance.vietstock.vn/PVS-tong-cong-ty-co-phan-dich-vu-ky-thuat-dau-khi-viet-nam.htm?tab=BCTQ#
+https://fwt.fialda.com/co-phieu/VIC/hoso
