@@ -1,0 +1,9 @@
+Table enterprises {
+  	enterprise_id int pk
+  	enterprise_code varchar
+  	enterprise_name varchar
+}
+
+Table financial_reports {
+  	financial_report_id int pk
+}
