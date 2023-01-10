@@ -26,7 +26,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/wamp64/www/Stock_market_PHP_1&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/wamp64/www/dotbedu_prod_easyedu&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -70,7 +70,8 @@
       <option name="presentableId" value="Default" />
       <updated>1670257224420</updated>
       <workItem from="1670257227353" duration="1068000" />
-      <workItem from="1670294123966" duration="7530000" />
+      <workItem from="1670294123966" duration="7637000" />
+      <workItem from="1670328123746" duration="48000" />
     </task>
     <servers />
   </component>
