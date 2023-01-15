@@ -1,0 +1,16 @@
+function search(str) {
+  if (str.length == 0) {
+    customAlert.alert('thành công');
+    document.getElementById("doanhnghiep").innerHTML = "Doanh nghiệp";
+    return;
+  } else {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("doanhnghiep").innerHTML = this.responseText;
+      }
+    };
+    xmlhttp.open("GET", "handling/searching.php?q=" + str, true);
+    xmlhttp.send();
+  }
+}

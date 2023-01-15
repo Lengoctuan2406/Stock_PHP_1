@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,20 +16,16 @@
     <link
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
         rel="stylesheet">
-
-    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-    <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
-    <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-    <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-    <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
-
-    <link href="assets/css/style.css" rel="stylesheet">
+    <?php include('_header.php'); ?>
 </head>
 <body style="background-image: url('assets/img/city_background_1.jpg'); background-size: cover">
 <?php include('navigation.php'); ?>
 <main id="main" class="main">
+    <?php
+    $ret = mysqli_query($_SESSION['con'], "SELECT * FROM enterprises WHERE enterprise_id='" . $_SESSION['enterprise_id'] . "';");
+    $num = mysqli_fetch_array($ret);
+    if ($num > 0) {
+    ?>
     <div class="row">
         <div class="col-lg-6">
             <div class="card">
@@ -36,27 +35,27 @@
                         <tbody>
                         <tr>
                             <td>Mã chứng khoán</td>
-                            <th style="text-align: right">VIC</th>
+                            <th style="text-align: right"><?php echo htmlentities($num['enterprise_code']); ?></th>
                         </tr>
                         <tr>
                             <td>Năm thành lập</td>
-                            <th style="text-align: right">2002</th>
+                            <th style="text-align: right"><?php echo htmlentities($num['enterprise_nam_thanh_lap']); ?></th>
                         </tr>
                         <tr>
                             <td>Vốn điều lệ</td>
-                            <th style="text-align: right">38.69 nghìn tỷ</th>
+                            <th style="text-align: right"><?php echo htmlentities($num['enterprise_von_dieu_le']); ?></th>
                         </tr>
                         <tr>
                             <td>Số lượng nhân sự</td>
-                            <th style="text-align: right">418</th>
+                            <th style="text-align: right"><?php echo htmlentities($num['enterprise_so_luong_nhan_su']); ?></th>
                         </tr>
                         <tr>
                             <td>Số lượng chi nhánh</td>
-                            <th style="text-align: right">1</th>
+                            <th style="text-align: right"><?php echo htmlentities($num['enterprise_so_luong_chi_nhanh']); ?></th>
                         </tr>
                         <tr>
-                            <td>Số lượng công ty con & liên kết	</td>
-                            <th style="text-align: right">21</th>
+                            <td>Số lượng công ty con & liên kết</td>
+                            <th style="text-align: right"><?php echo htmlentities($num['enterprise_so_luong_cong_ty_con_lien_ket']); ?></th>
                         </tr>
                         </tbody>
                     </table>
@@ -67,40 +66,39 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Thông tin niêm yết</h5>
-
                     <table class="table table-hover">
                         <tbody>
                         <tr>
                             <td>Ngày niêm yết</td>
-                            <th style="text-align: right">19/09/2007</th>
+                            <th style="text-align: right"><?php echo htmlentities($num['enterprise_ngay_niem_yet']); ?></th>
                         </tr>
                         <tr>
                             <td>Nơi niêm yết</td>
-                            <th style="text-align: right">HSX</th>
+                            <th style="text-align: right"><?php echo htmlentities($num['enterprise_noi_niem_yet']); ?></th>
                         </tr>
                         <tr>
                             <td>Giá chào sàn</td>
-                            <th style="text-align: right">125,000</th>
+                            <th style="text-align: right"><?php echo htmlentities($num['enterprise_gia_chao_san']); ?></th>
                         </tr>
                         <tr>
                             <td>Giá ngày GD đầu tiên</td>
-                            <th style="text-align: right">125,000</th>
+                            <th style="text-align: right"><?php echo htmlentities($num['enterprise_gia_ngay_giao_dich_dau_tien']); ?></th>
                         </tr>
                         <tr>
                             <td>Ngày phát hành cuối</td>
-                            <th style="text-align: right">16/08/2022</th>
+                            <th style="text-align: right"><?php echo htmlentities($num['enterprise_ngay_phat_hanh_cuoi']); ?></th>
                         </tr>
                         <tr>
                             <td>KL niêm yết lần đầu</td>
-                            <th style="text-align: right">307,840</th>
+                            <th style="text-align: right"><?php echo htmlentities($num['enterprise_khoi_luong_niem_yet_lan_dau']); ?></th>
                         </tr>
                         <tr>
                             <td>KL đang niêm yết</td>
-                            <th style="text-align: right">3,813,935,561</th>
+                            <th style="text-align: right"><?php echo htmlentities($num['enterprise_khoi_luong_dang_niem_yet']); ?></th>
                         </tr>
                         <tr>
                             <td>KL cổ phiếu đang lưu hành</td>
-                            <th style="text-align: right">3,813,935,561</th>
+                            <th style="text-align: right"><?php echo htmlentities($num['enterprise_khoi_luong_co_phieu_dang_luu_hanh']); ?></th>
                         </tr>
                         </tbody>
                     </table>
@@ -111,22 +109,15 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">Mô tả doanh nghiệp</h5>
-            Ut in ea error laudantium quas omnis officia. Sit sed praesentium voluptas. Corrupti inventore consequatur nisi necessitatibus modi consequuntur soluta id. Enim autem est esse natus assumenda. Non sunt dignissimos officiis expedita. Consequatur sint repellendus voluptas.
-            Quidem sit est nulla ullam. Suscipit debitis ullam iusto dolorem animi dolorem numquam. Enim fuga ipsum dolor nulla quia ut.
-            Rerum dolor voluptatem et deleniti libero totam numquam nobis distinctio. Sit sint aut. Consequatur rerum in.
+            <?php echo htmlentities($num['enterprise_tong_quan']); ?>
         </div>
     </div>
+    <?php
+    }
+    ?>
 </main>
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>
-<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/vendor/chart.js/chart.min.js"></script>
-<script src="assets/vendor/echarts/echarts.min.js"></script>
-<script src="assets/vendor/quill/quill.min.js"></script>
-<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-<script src="assets/vendor/tinymce/tinymce.min.js"></script>
-<script src="assets/vendor/php-email-form/validate.js"></script>
-<script src="assets/js/main.js"></script>
+<?php include('_footer.php'); ?>
 </body>
 </html>

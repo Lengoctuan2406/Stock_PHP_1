@@ -1,21 +1,22 @@
+<?php include('handling/handling_navigation.php'); ?>
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="index.php" class="logo d-flex align-items-center">
-            <span class="d-none d-lg-block">Doanh nghiệp</span>
+        <a href="dashboard.php" class="logo d-flex align-items-center">
+            <span class="d-none d-lg-block"><?php echo $_SESSION['enterprise_code']; ?></span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div>
     <div class="search-bar">
-        <form class="search-form d-flex align-items-center" method="POST" action="#">
-            <input type="text" name="query" placeholder="Tìm kiếm doanh nghiệp" title="Enter search keyword">
-            <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+        <form class="search-form d-flex align-items-center" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+            <input type="text" name="queryEnterprises" placeholder="Tìm kiếm doanh nghiệp" title="Tìm kiếm doanh nghiệp">
+            <button type="submit" title="Tìm kiếm" name="search"><i class="bi bi-search"></i></button>
         </form>
     </div>
 </header>
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
-            <a class="nav-link collapsed" href="index.php">
+            <a class="nav-link collapsed" href="dashboard.php">
                 <i class="bi bi-grid"></i>
                 <span>Tổng quan</span>
             </a>
@@ -45,17 +46,17 @@
             </a>
             <ul id="financial-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="financial.html">
+                    <a href="financial_report_see_all.php">
                         <i class="bi bi-circle"></i><span>Xem</span>
                     </a>
                 </li>
                 <li>
-                    <a href="financial-update.html">
+                    <a href="financial_report_update.php">
                         <i class="bi bi-circle"></i><span>Sửa đổi</span>
                     </a>
                 </li>
                 <li>
-                    <a href="financial-add.html">
+                    <a href="financial_report_add.php">
                         <i class="bi bi-circle"></i><span>Thêm mới</span>
                     </a>
                 </li>
@@ -69,19 +70,19 @@
             </a>
             <ul id="report-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav" style="">
                 <li>
-                    <a href="charts-line.html">
+                    <a href="charts_line.php">
                         <i class="bi bi-circle"></i><span>Biểu đồ đường</span>
                     </a>
                 </li>
                 <li>
-                    <a href="charts-line.html">
+                    <a href="charts_column.php">
                         <i class="bi bi-circle"></i><span>Biểu đồ cột</span>
                     </a>
                 </li>
             </ul>
         </li>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="">
+            <a class="nav-link collapsed" href="predict.php">
                 <i class="bi bi-graph-up"></i>
                 <span>Dự đoán</span>
             </a>
@@ -105,11 +106,11 @@
                 </li>
             </ul>
         </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-register.html">
-                <i class="bi bi-card-list"></i>
-                <span>Hướng dẫn sử dụng</span>
-            </a>
-        </li>
+<!--        <li class="nav-item">-->
+<!--            <a class="nav-link collapsed" href="pages-register.html">-->
+<!--                <i class="bi bi-card-list"></i>-->
+<!--                <span>Hướng dẫn sử dụng</span>-->
+<!--            </a>-->
+<!--        </li>-->
     </ul>
 </aside>
