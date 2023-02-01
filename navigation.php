@@ -23,12 +23,6 @@
         </li>
         <li class="nav-heading">Thông tin</li>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="information_basic.php">
-                <i class="bi bi-clipboard-plus"></i>
-                <span>Thông tin chung</span>
-            </a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link collapsed" href="financial_report.php">
                 <i class="bi bi-newspaper"></i>
                 <span>Báo cáo tài chính</span>
@@ -67,12 +61,12 @@
             </a>
             <ul id="ml-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav" style="">
                 <li>
-                    <a href="#">
+                    <a href="calculator_canslim.php">
                         <i class="bi bi-circle"></i><span>Canslim</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="calculator_4m.php">
                         <i class="bi bi-circle"></i><span>4M</span>
                     </a>
                 </li>
