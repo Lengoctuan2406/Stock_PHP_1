@@ -1,3 +1,7 @@
+<?php
+session_start();
+include('database/connect.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,16 +30,48 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>2021</td>
-                        <td style="width: 20%"><button type="button" class="btn btn-outline-warning" disabled="">Thiếu dữ liệu</button></td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>2021</td>
-                        <td style="width: 20%"><button type="button" class="btn btn-outline-primary" disabled="">Đầy đủ dữ liệu</button></td>
-                    </tr>
+                    <?php
+                    $query_all = mysqli_query($_SESSION['con'], "SELECT * FROM financial_reports WHERE enterprise_id='" . $_SESSION['enterprise_id'] . "' ORDER BY financial_year DESC, financial_quarter DESC;");
+                    while ($row = mysqli_fetch_array($query_all)) {
+                        if ($row['financial_doanh_thu_thuan'] == ""
+                            || $row['financial_loi_nhuan_gop'] == ""
+                            || $row['financial_loi_nhuan_thuan_tu_hoat_dong_kinh_doanh'] == ""
+                            || $row['financial_loi_nhuan_sau_thue_thu_nhap_doanh_nghiep'] == ""
+                            || $row['financial_loi_nhuan_sau_thue_cua_co_dong_cong_ty_me'] == ""
+                            || $row['financial_tai_san_ngan_han'] == ""
+                            || $row['financial_tong_tai_san'] == ""
+                            || $row['financial_no_phai_tra'] == ""
+                            || $row['financial_no_ngan_han'] == ""
+                            || $row['financial_von_chu_so_huu'] == ""
+                            || $row['financial_eps_4_quy_gan_nhat'] == ""
+                            || $row['financial_bvps_co_ban'] == ""
+                            || $row['financial_pe_co_ban'] == ""
+                            || $row['financial_ros_co_ban'] == ""
+                            || $row['financial_roea'] == ""
+                            || $row['financial_roaa'] == ""
+                        ) { ?>
+                            <tr>
+                                <td><?php echo $row['financial_quarter']; ?></td>
+                                <td><?php echo $row['financial_year']; ?></td>
+                                <td style="width: 20%">
+                                    <button type="button" class="btn btn-outline-warning" disabled>Đang xử lý</button>
+                                </td>
+                            </tr>
+                            <?php
+                        } else {
+                            ?>
+                            <tr>
+                                <td><?php echo $row['financial_quarter']; ?></td>
+                                <td><?php echo $row['financial_year']; ?></td>
+                                <td style="width: 20%">
+                                    <button type="button" class="btn btn-outline-primary" disabled>Có thể xem</button>
+                                </td>
+                                </td>
+                            </tr>
+                            <?php
+                        }
+                    }
+                    ?>
                     </tbody>
                 </table>
             </div>
@@ -44,5529 +80,1245 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">Nhập dữ liệu cho biểu đồ</h5>
-            <form class="row g-3">
+            <form class="row g-3" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <select class="form-select" id="tuquy" aria-label="Từ quý">
-                            <option selected="">Quý 1</option>
-                            <option value="1">Quý 2</option>
-                            <option value="2">Quý 3</option>
-                            <option value="3">Quý 4</option>
+                        <select name="tuquy" class="form-select" id="tuquy" aria-label="Từ quý">
+                            <option value="1" selected>Quý 1</option>
+                            <option value="2">Quý 2</option>
+                            <option value="3">Quý 3</option>
+                            <option value="4">Quý 4</option>
                         </select>
                         <label for="tuquy">Từ quý</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <select class="form-select" id="nam" aria-label="Từ năm">
-                            <option selected="">2021</option>
-                            <option value="1">2022</option>
+                        <select name="tunam" class="form-select" id="tunam" aria-label="Từ năm">
+                            <option value="2018" selected>2018</option>
+                            <option value="2019">2019</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
                         </select>
                         <label for="tunam">Từ năm</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <select class="form-select" id="quy" aria-label="Đến quý">
-                            <option selected="">Quý 1</option>
-                            <option value="1">Quý 2</option>
-                            <option value="2">Quý 3</option>
-                            <option value="3">Quý 4</option>
+                        <select name="denquy" class="form-select" id="quy" aria-label="Đến quý">
+                            <option value="1" selected>Quý 1</option>
+                            <option value="2">Quý 2</option>
+                            <option value="3">Quý 3</option>
+                            <option value="4">Quý 4</option>
                         </select>
                         <label for="denquy">Đến quý</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating mb-3">
-                        <select class="form-select" id="nam" aria-label="Đến năm">
-                            <option selected="">2021</option>
-                            <option value="1">2022</option>
+                        <select name="dennam" class="form-select" id="nam" aria-label="Đến năm">
+                            <option value="2018" selected>2018</option>
+                            <option value="2019">2019</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
                         </select>
                         <label for="dennam">Đến năm</label>
                     </div>
                 </div>
-                <!--                <div class="text-center">-->
-                <!--                    <button type="submit" class="btn btn-primary">Submit</button>-->
-                <!--                    <button type="reset" class="btn btn-secondary">Reset</button>-->
-                <!--                </div>-->
+                <div class="text-center">
+                    <button name="see_charts" style="width: 100%" type="submit" class="btn btn-primary">Xem biểu đồ
+                    </button>
+                </div>
             </form>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Doanh thu thuần</h5>
-            <div id="areaChart"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const series = {
-                        "monthDataSeries1": {
-                            "prices": [
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9340.85
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries2": {
-                            "prices": [
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9040.85,
-                                8340.7,
-                                8165.5,
-                                8122.9,
-                                8107.85,
-                                8128.0
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries3": {
-                            "prices": [
-                                7114.25,
-                                7126.6,
-                                7116.95,
-                                7203.7,
-                                7233.75,
-                                7451.0,
-                                7381.15,
-                                7348.95,
-                                7347.75,
-                                7311.25,
-                                7266.4,
-                                7253.25,
-                                7215.45,
-                                7266.35,
-                                7315.25,
-                                7237.2,
-                                7191.4,
-                                7238.95,
-                                7222.6,
-                                7217.9,
-                                7359.3,
-                                7371.55,
-                                7371.15,
-                                7469.2,
-                                7429.25,
-                                7434.65,
-                                7451.1,
-                                7475.25,
-                                7566.25,
-                                7556.8,
-                                7525.55,
-                                7555.45,
-                                7560.9,
-                                7490.7,
-                                7527.6,
-                                7551.9,
-                                7514.85,
-                                7577.95,
-                                7592.3,
-                                7621.95,
-                                7707.95,
-                                7859.1,
-                                7815.7,
-                                7739.0,
-                                7778.7,
-                                7839.45,
-                                7756.45,
-                                7669.2,
-                                7580.45,
-                                7452.85,
-                                7617.25,
-                                7701.6,
-                                7606.8,
-                                7620.05,
-                                7513.85,
-                                7498.45,
-                                7575.45,
-                                7601.95,
-                                7589.1,
-                                7525.85,
-                                7569.5,
-                                7702.5,
-                                7812.7,
-                                7803.75,
-                                7816.3,
-                                7851.15,
-                                7912.2,
-                                7972.8,
-                                8145.0,
-                                8161.1,
-                                8121.05,
-                                8071.25,
-                                8088.2,
-                                8154.45,
-                                8148.3,
-                                8122.05,
-                                8132.65,
-                                8074.55,
-                                7952.8,
-                                7885.55,
-                                7733.9,
-                                7897.15,
-                                7973.15,
-                                7888.5,
-                                7842.8,
-                                7838.4,
-                                7909.85,
-                                7892.75,
-                                7897.75,
-                                7820.05,
-                                7904.4,
-                                7872.2,
-                                7847.5,
-                                7849.55,
-                                7789.6,
-                                7736.35,
-                                7819.4,
-                                7875.35,
-                                7871.8,
-                                8076.5,
-                                8114.8,
-                                8193.55,
-                                8217.1,
-                                8235.05,
-                                8215.3,
-                                8216.4,
-                                8301.55,
-                                8235.25,
-                                8229.75,
-                                8201.95,
-                                8164.95,
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2
-                            ],
-                            "dates": [
-                                "02 Jun 2017",
-                                "05 Jun 2017",
-                                "06 Jun 2017",
-                                "07 Jun 2017",
-                                "08 Jun 2017",
-                                "09 Jun 2017",
-                                "12 Jun 2017",
-                                "13 Jun 2017",
-                                "14 Jun 2017",
-                                "15 Jun 2017",
-                                "16 Jun 2017",
-                                "19 Jun 2017",
-                                "20 Jun 2017",
-                                "21 Jun 2017",
-                                "22 Jun 2017",
-                                "23 Jun 2017",
-                                "27 Jun 2017",
-                                "28 Jun 2017",
-                                "29 Jun 2017",
-                                "30 Jun 2017",
-                                "03 Jul 2017",
-                                "04 Jul 2017",
-                                "05 Jul 2017",
-                                "06 Jul 2017",
-                                "07 Jul 2017",
-                                "10 Jul 2017",
-                                "11 Jul 2017",
-                                "12 Jul 2017",
-                                "13 Jul 2017",
-                                "14 Jul 2017",
-                                "17 Jul 2017",
-                                "18 Jul 2017",
-                                "19 Jul 2017",
-                                "20 Jul 2017",
-                                "21 Jul 2017",
-                                "24 Jul 2017",
-                                "25 Jul 2017",
-                                "26 Jul 2017",
-                                "27 Jul 2017",
-                                "28 Jul 2017",
-                                "31 Jul 2017",
-                                "01 Aug 2017",
-                                "02 Aug 2017",
-                                "03 Aug 2017",
-                                "04 Aug 2017",
-                                "07 Aug 2017",
-                                "08 Aug 2017",
-                                "09 Aug 2017",
-                                "10 Aug 2017",
-                                "11 Aug 2017",
-                                "14 Aug 2017",
-                                "16 Aug 2017",
-                                "17 Aug 2017",
-                                "18 Aug 2017",
-                                "21 Aug 2017",
-                                "22 Aug 2017",
-                                "23 Aug 2017",
-                                "24 Aug 2017",
-                                "28 Aug 2017",
-                                "29 Aug 2017",
-                                "30 Aug 2017",
-                                "31 Aug 2017",
-                                "01 Sep 2017",
-                                "04 Sep 2017",
-                                "05 Sep 2017",
-                                "06 Sep 2017",
-                                "07 Sep 2017",
-                                "08 Sep 2017",
-                                "11 Sep 2017",
-                                "12 Sep 2017",
-                                "13 Sep 2017",
-                                "14 Sep 2017",
-                                "15 Sep 2017",
-                                "18 Sep 2017",
-                                "19 Sep 2017",
-                                "20 Sep 2017",
-                                "21 Sep 2017",
-                                "22 Sep 2017",
-                                "25 Sep 2017",
-                                "26 Sep 2017",
-                                "27 Sep 2017",
-                                "28 Sep 2017",
-                                "29 Sep 2017",
-                                "03 Oct 2017",
-                                "04 Oct 2017",
-                                "05 Oct 2017",
-                                "06 Oct 2017",
-                                "09 Oct 2017",
-                                "10 Oct 2017",
-                                "11 Oct 2017",
-                                "12 Oct 2017",
-                                "13 Oct 2017",
-                                "16 Oct 2017",
-                                "17 Oct 2017",
-                                "18 Oct 2017",
-                                "19 Oct 2017",
-                                "23 Oct 2017",
-                                "24 Oct 2017",
-                                "25 Oct 2017",
-                                "26 Oct 2017",
-                                "27 Oct 2017",
-                                "30 Oct 2017",
-                                "31 Oct 2017",
-                                "01 Nov 2017",
-                                "02 Nov 2017",
-                                "03 Nov 2017",
-                                "06 Nov 2017",
-                                "07 Nov 2017",
-                                "08 Nov 2017",
-                                "09 Nov 2017",
-                                "10 Nov 2017",
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017"
-                            ]
-                        }
-                    }
-                    new ApexCharts(document.querySelector("#areaChart"), {
-                        series: [{
-                            name: "STOCK ABC",
-                            data: series.monthDataSeries1.prices
-                        }],
-                        chart: {
-                            type: 'area',
-                            height: 350,
-                            zoom: {
-                                enabled: false
+    <?php
+    if (isset($_POST['see_charts'])) {
+        $GLOBALS['count_charts'] = 1;
+
+        $GLOBALS['denquy'] = (int)$_POST['denquy'];
+        $GLOBALS['dennam'] = (int)$_POST['dennam'];
+        //echo "<script>alert(".$GLOBALS['test'].");</script>";
+
+        $GLOBALS['tunam'] = (int)$_POST['tunam'];
+        $GLOBALS['tuquy'] = (int)$_POST['tuquy'];
+        while ($GLOBALS['tunam'] != $GLOBALS['dennam'] || $GLOBALS['tuquy'] != $GLOBALS['denquy']) {
+            $ret = mysqli_query($_SESSION['con'], "SELECT * FROM financial_reports WHERE enterprise_id='" . $_SESSION['enterprise_id'] . "' AND financial_year='" . $GLOBALS['tunam'] . "' AND financial_quarter='" . $GLOBALS['tuquy'] . "';");
+            $num = mysqli_fetch_array($ret);
+            $info['financial_year'][$GLOBALS['count_charts']] = $num['financial_year'];
+            $info['financial_quarter'][$GLOBALS['count_charts']] = $num['financial_quarter'];
+            $info['financial_doanh_thu_thuan'][$GLOBALS['count_charts']] = $num['financial_doanh_thu_thuan'];
+            $info['financial_loi_nhuan_gop'][$GLOBALS['count_charts']] = $num['financial_loi_nhuan_gop'];
+            $info['financial_loi_nhuan_thuan_tu_hoat_dong_kinh_doanh'][$GLOBALS['count_charts']] = $num['financial_loi_nhuan_thuan_tu_hoat_dong_kinh_doanh'];
+            $info['financial_loi_nhuan_sau_thue_thu_nhap_doanh_nghiep'][$GLOBALS['count_charts']] = $num['financial_loi_nhuan_sau_thue_thu_nhap_doanh_nghiep'];
+            $info['financial_loi_nhuan_sau_thue_cua_co_dong_cong_ty_me'][$GLOBALS['count_charts']] = $num['financial_loi_nhuan_sau_thue_cua_co_dong_cong_ty_me'];
+            $info['financial_tai_san_ngan_han'][$GLOBALS['count_charts']] = $num['financial_tai_san_ngan_han'];
+            $info['financial_tong_tai_san'][$GLOBALS['count_charts']] = $num['financial_tong_tai_san'];
+            $info['financial_no_phai_tra'][$GLOBALS['count_charts']] = $num['financial_no_phai_tra'];
+            $info['financial_no_ngan_han'][$GLOBALS['count_charts']] = $num['financial_no_ngan_han'];
+            $info['financial_von_chu_so_huu'][$GLOBALS['count_charts']] = $num['financial_von_chu_so_huu'];
+            $info['financial_eps_4_quy_gan_nhat'][$GLOBALS['count_charts']] = $num['financial_eps_4_quy_gan_nhat'];
+            $info['financial_bvps_co_ban'][$GLOBALS['count_charts']] = $num['financial_bvps_co_ban'];
+            $info['financial_pe_co_ban'][$GLOBALS['count_charts']] = $num['financial_pe_co_ban'];
+            $info['financial_ros_co_ban'][$GLOBALS['count_charts']] = $num['financial_ros_co_ban'];
+            $info['financial_roea'][$GLOBALS['count_charts']] = $num['financial_roea'];
+            $info['financial_roaa'][$GLOBALS['count_charts']] = $num['financial_roaa'];
+            if ($GLOBALS['tuquy'] != 4) {
+                $GLOBALS['tuquy']++;
+            } else {
+                $GLOBALS['tuquy'] = 1;
+                $GLOBALS['tunam']++;
+            }
+            $GLOBALS['count_charts']++;
+        }
+        ?>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Doanh thu thuần</h5>
+                <div id="doanhthuthuan"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_doanhthuthuan = 1;
+                                    while ($count_doanhthuthuan != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_doanh_thu_thuan'][$count_doanhthuthuan] . ",";
+                                        $count_doanhthuthuan++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
                             }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'straight'
-                        },
-                        subtitle: {
-                            text: 'Price Movements',
-                            align: 'left'
-                        },
-                        labels: series.monthDataSeries1.dates,
-                        xaxis: {
-                            type: 'datetime',
-                        },
-                        yaxis: {
-                            opposite: true
-                        },
-                        legend: {
-                            horizontalAlign: 'left'
                         }
-                    }).render();
-                });
-            </script>
-            <!-- End Area Chart -->
-
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Lợi nhuận gộp</h5>
-            <div id="areaChart"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const series = {
-                        "monthDataSeries1": {
-                            "prices": [
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9340.85
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries2": {
-                            "prices": [
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9040.85,
-                                8340.7,
-                                8165.5,
-                                8122.9,
-                                8107.85,
-                                8128.0
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries3": {
-                            "prices": [
-                                7114.25,
-                                7126.6,
-                                7116.95,
-                                7203.7,
-                                7233.75,
-                                7451.0,
-                                7381.15,
-                                7348.95,
-                                7347.75,
-                                7311.25,
-                                7266.4,
-                                7253.25,
-                                7215.45,
-                                7266.35,
-                                7315.25,
-                                7237.2,
-                                7191.4,
-                                7238.95,
-                                7222.6,
-                                7217.9,
-                                7359.3,
-                                7371.55,
-                                7371.15,
-                                7469.2,
-                                7429.25,
-                                7434.65,
-                                7451.1,
-                                7475.25,
-                                7566.25,
-                                7556.8,
-                                7525.55,
-                                7555.45,
-                                7560.9,
-                                7490.7,
-                                7527.6,
-                                7551.9,
-                                7514.85,
-                                7577.95,
-                                7592.3,
-                                7621.95,
-                                7707.95,
-                                7859.1,
-                                7815.7,
-                                7739.0,
-                                7778.7,
-                                7839.45,
-                                7756.45,
-                                7669.2,
-                                7580.45,
-                                7452.85,
-                                7617.25,
-                                7701.6,
-                                7606.8,
-                                7620.05,
-                                7513.85,
-                                7498.45,
-                                7575.45,
-                                7601.95,
-                                7589.1,
-                                7525.85,
-                                7569.5,
-                                7702.5,
-                                7812.7,
-                                7803.75,
-                                7816.3,
-                                7851.15,
-                                7912.2,
-                                7972.8,
-                                8145.0,
-                                8161.1,
-                                8121.05,
-                                8071.25,
-                                8088.2,
-                                8154.45,
-                                8148.3,
-                                8122.05,
-                                8132.65,
-                                8074.55,
-                                7952.8,
-                                7885.55,
-                                7733.9,
-                                7897.15,
-                                7973.15,
-                                7888.5,
-                                7842.8,
-                                7838.4,
-                                7909.85,
-                                7892.75,
-                                7897.75,
-                                7820.05,
-                                7904.4,
-                                7872.2,
-                                7847.5,
-                                7849.55,
-                                7789.6,
-                                7736.35,
-                                7819.4,
-                                7875.35,
-                                7871.8,
-                                8076.5,
-                                8114.8,
-                                8193.55,
-                                8217.1,
-                                8235.05,
-                                8215.3,
-                                8216.4,
-                                8301.55,
-                                8235.25,
-                                8229.75,
-                                8201.95,
-                                8164.95,
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2
-                            ],
-                            "dates": [
-                                "02 Jun 2017",
-                                "05 Jun 2017",
-                                "06 Jun 2017",
-                                "07 Jun 2017",
-                                "08 Jun 2017",
-                                "09 Jun 2017",
-                                "12 Jun 2017",
-                                "13 Jun 2017",
-                                "14 Jun 2017",
-                                "15 Jun 2017",
-                                "16 Jun 2017",
-                                "19 Jun 2017",
-                                "20 Jun 2017",
-                                "21 Jun 2017",
-                                "22 Jun 2017",
-                                "23 Jun 2017",
-                                "27 Jun 2017",
-                                "28 Jun 2017",
-                                "29 Jun 2017",
-                                "30 Jun 2017",
-                                "03 Jul 2017",
-                                "04 Jul 2017",
-                                "05 Jul 2017",
-                                "06 Jul 2017",
-                                "07 Jul 2017",
-                                "10 Jul 2017",
-                                "11 Jul 2017",
-                                "12 Jul 2017",
-                                "13 Jul 2017",
-                                "14 Jul 2017",
-                                "17 Jul 2017",
-                                "18 Jul 2017",
-                                "19 Jul 2017",
-                                "20 Jul 2017",
-                                "21 Jul 2017",
-                                "24 Jul 2017",
-                                "25 Jul 2017",
-                                "26 Jul 2017",
-                                "27 Jul 2017",
-                                "28 Jul 2017",
-                                "31 Jul 2017",
-                                "01 Aug 2017",
-                                "02 Aug 2017",
-                                "03 Aug 2017",
-                                "04 Aug 2017",
-                                "07 Aug 2017",
-                                "08 Aug 2017",
-                                "09 Aug 2017",
-                                "10 Aug 2017",
-                                "11 Aug 2017",
-                                "14 Aug 2017",
-                                "16 Aug 2017",
-                                "17 Aug 2017",
-                                "18 Aug 2017",
-                                "21 Aug 2017",
-                                "22 Aug 2017",
-                                "23 Aug 2017",
-                                "24 Aug 2017",
-                                "28 Aug 2017",
-                                "29 Aug 2017",
-                                "30 Aug 2017",
-                                "31 Aug 2017",
-                                "01 Sep 2017",
-                                "04 Sep 2017",
-                                "05 Sep 2017",
-                                "06 Sep 2017",
-                                "07 Sep 2017",
-                                "08 Sep 2017",
-                                "11 Sep 2017",
-                                "12 Sep 2017",
-                                "13 Sep 2017",
-                                "14 Sep 2017",
-                                "15 Sep 2017",
-                                "18 Sep 2017",
-                                "19 Sep 2017",
-                                "20 Sep 2017",
-                                "21 Sep 2017",
-                                "22 Sep 2017",
-                                "25 Sep 2017",
-                                "26 Sep 2017",
-                                "27 Sep 2017",
-                                "28 Sep 2017",
-                                "29 Sep 2017",
-                                "03 Oct 2017",
-                                "04 Oct 2017",
-                                "05 Oct 2017",
-                                "06 Oct 2017",
-                                "09 Oct 2017",
-                                "10 Oct 2017",
-                                "11 Oct 2017",
-                                "12 Oct 2017",
-                                "13 Oct 2017",
-                                "16 Oct 2017",
-                                "17 Oct 2017",
-                                "18 Oct 2017",
-                                "19 Oct 2017",
-                                "23 Oct 2017",
-                                "24 Oct 2017",
-                                "25 Oct 2017",
-                                "26 Oct 2017",
-                                "27 Oct 2017",
-                                "30 Oct 2017",
-                                "31 Oct 2017",
-                                "01 Nov 2017",
-                                "02 Nov 2017",
-                                "03 Nov 2017",
-                                "06 Nov 2017",
-                                "07 Nov 2017",
-                                "08 Nov 2017",
-                                "09 Nov 2017",
-                                "10 Nov 2017",
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017"
-                            ]
-                        }
-                    }
-                    new ApexCharts(document.querySelector("#areaChart"), {
-                        series: [{
-                            name: "STOCK ABC",
-                            data: series.monthDataSeries1.prices
-                        }],
-                        chart: {
-                            type: 'area',
-                            height: 350,
-                            zoom: {
+                        new ApexCharts(document.querySelector("#doanhthuthuan"), {
+                            series: [{
+                                name: "STOCK ABC",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
                                 enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Doanh thu thuần',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
                             }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'straight'
-                        },
-                        subtitle: {
-                            text: 'Price Movements',
-                            align: 'left'
-                        },
-                        labels: series.monthDataSeries1.dates,
-                        xaxis: {
-                            type: 'datetime',
-                        },
-                        yaxis: {
-                            opposite: true
-                        },
-                        legend: {
-                            horizontalAlign: 'left'
-                        }
-                    }).render();
-                });
-            </script>
+                        }).render();
+                    });
+                </script>
+
+            </div>
         </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">LN thuần từ HĐKD</h5>
-            <div id="areaChart"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const series = {
-                        "monthDataSeries1": {
-                            "prices": [
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9340.85
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries2": {
-                            "prices": [
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9040.85,
-                                8340.7,
-                                8165.5,
-                                8122.9,
-                                8107.85,
-                                8128.0
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries3": {
-                            "prices": [
-                                7114.25,
-                                7126.6,
-                                7116.95,
-                                7203.7,
-                                7233.75,
-                                7451.0,
-                                7381.15,
-                                7348.95,
-                                7347.75,
-                                7311.25,
-                                7266.4,
-                                7253.25,
-                                7215.45,
-                                7266.35,
-                                7315.25,
-                                7237.2,
-                                7191.4,
-                                7238.95,
-                                7222.6,
-                                7217.9,
-                                7359.3,
-                                7371.55,
-                                7371.15,
-                                7469.2,
-                                7429.25,
-                                7434.65,
-                                7451.1,
-                                7475.25,
-                                7566.25,
-                                7556.8,
-                                7525.55,
-                                7555.45,
-                                7560.9,
-                                7490.7,
-                                7527.6,
-                                7551.9,
-                                7514.85,
-                                7577.95,
-                                7592.3,
-                                7621.95,
-                                7707.95,
-                                7859.1,
-                                7815.7,
-                                7739.0,
-                                7778.7,
-                                7839.45,
-                                7756.45,
-                                7669.2,
-                                7580.45,
-                                7452.85,
-                                7617.25,
-                                7701.6,
-                                7606.8,
-                                7620.05,
-                                7513.85,
-                                7498.45,
-                                7575.45,
-                                7601.95,
-                                7589.1,
-                                7525.85,
-                                7569.5,
-                                7702.5,
-                                7812.7,
-                                7803.75,
-                                7816.3,
-                                7851.15,
-                                7912.2,
-                                7972.8,
-                                8145.0,
-                                8161.1,
-                                8121.05,
-                                8071.25,
-                                8088.2,
-                                8154.45,
-                                8148.3,
-                                8122.05,
-                                8132.65,
-                                8074.55,
-                                7952.8,
-                                7885.55,
-                                7733.9,
-                                7897.15,
-                                7973.15,
-                                7888.5,
-                                7842.8,
-                                7838.4,
-                                7909.85,
-                                7892.75,
-                                7897.75,
-                                7820.05,
-                                7904.4,
-                                7872.2,
-                                7847.5,
-                                7849.55,
-                                7789.6,
-                                7736.35,
-                                7819.4,
-                                7875.35,
-                                7871.8,
-                                8076.5,
-                                8114.8,
-                                8193.55,
-                                8217.1,
-                                8235.05,
-                                8215.3,
-                                8216.4,
-                                8301.55,
-                                8235.25,
-                                8229.75,
-                                8201.95,
-                                8164.95,
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2
-                            ],
-                            "dates": [
-                                "02 Jun 2017",
-                                "05 Jun 2017",
-                                "06 Jun 2017",
-                                "07 Jun 2017",
-                                "08 Jun 2017",
-                                "09 Jun 2017",
-                                "12 Jun 2017",
-                                "13 Jun 2017",
-                                "14 Jun 2017",
-                                "15 Jun 2017",
-                                "16 Jun 2017",
-                                "19 Jun 2017",
-                                "20 Jun 2017",
-                                "21 Jun 2017",
-                                "22 Jun 2017",
-                                "23 Jun 2017",
-                                "27 Jun 2017",
-                                "28 Jun 2017",
-                                "29 Jun 2017",
-                                "30 Jun 2017",
-                                "03 Jul 2017",
-                                "04 Jul 2017",
-                                "05 Jul 2017",
-                                "06 Jul 2017",
-                                "07 Jul 2017",
-                                "10 Jul 2017",
-                                "11 Jul 2017",
-                                "12 Jul 2017",
-                                "13 Jul 2017",
-                                "14 Jul 2017",
-                                "17 Jul 2017",
-                                "18 Jul 2017",
-                                "19 Jul 2017",
-                                "20 Jul 2017",
-                                "21 Jul 2017",
-                                "24 Jul 2017",
-                                "25 Jul 2017",
-                                "26 Jul 2017",
-                                "27 Jul 2017",
-                                "28 Jul 2017",
-                                "31 Jul 2017",
-                                "01 Aug 2017",
-                                "02 Aug 2017",
-                                "03 Aug 2017",
-                                "04 Aug 2017",
-                                "07 Aug 2017",
-                                "08 Aug 2017",
-                                "09 Aug 2017",
-                                "10 Aug 2017",
-                                "11 Aug 2017",
-                                "14 Aug 2017",
-                                "16 Aug 2017",
-                                "17 Aug 2017",
-                                "18 Aug 2017",
-                                "21 Aug 2017",
-                                "22 Aug 2017",
-                                "23 Aug 2017",
-                                "24 Aug 2017",
-                                "28 Aug 2017",
-                                "29 Aug 2017",
-                                "30 Aug 2017",
-                                "31 Aug 2017",
-                                "01 Sep 2017",
-                                "04 Sep 2017",
-                                "05 Sep 2017",
-                                "06 Sep 2017",
-                                "07 Sep 2017",
-                                "08 Sep 2017",
-                                "11 Sep 2017",
-                                "12 Sep 2017",
-                                "13 Sep 2017",
-                                "14 Sep 2017",
-                                "15 Sep 2017",
-                                "18 Sep 2017",
-                                "19 Sep 2017",
-                                "20 Sep 2017",
-                                "21 Sep 2017",
-                                "22 Sep 2017",
-                                "25 Sep 2017",
-                                "26 Sep 2017",
-                                "27 Sep 2017",
-                                "28 Sep 2017",
-                                "29 Sep 2017",
-                                "03 Oct 2017",
-                                "04 Oct 2017",
-                                "05 Oct 2017",
-                                "06 Oct 2017",
-                                "09 Oct 2017",
-                                "10 Oct 2017",
-                                "11 Oct 2017",
-                                "12 Oct 2017",
-                                "13 Oct 2017",
-                                "16 Oct 2017",
-                                "17 Oct 2017",
-                                "18 Oct 2017",
-                                "19 Oct 2017",
-                                "23 Oct 2017",
-                                "24 Oct 2017",
-                                "25 Oct 2017",
-                                "26 Oct 2017",
-                                "27 Oct 2017",
-                                "30 Oct 2017",
-                                "31 Oct 2017",
-                                "01 Nov 2017",
-                                "02 Nov 2017",
-                                "03 Nov 2017",
-                                "06 Nov 2017",
-                                "07 Nov 2017",
-                                "08 Nov 2017",
-                                "09 Nov 2017",
-                                "10 Nov 2017",
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017"
-                            ]
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Lợi nhuận gộp</h5>
+                <div id="loinhuangop"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_loi_nhuan_gop'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
                         }
-                    }
-                    new ApexCharts(document.querySelector("#areaChart"), {
-                        series: [{
-                            name: "STOCK ABC",
-                            data: series.monthDataSeries1.prices
-                        }],
-                        chart: {
-                            type: 'area',
-                            height: 350,
-                            zoom: {
+                        new ApexCharts(document.querySelector("#loinhuangop"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
                                 enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
                             }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'straight'
-                        },
-                        subtitle: {
-                            text: 'Price Movements',
-                            align: 'left'
-                        },
-                        labels: series.monthDataSeries1.dates,
-                        xaxis: {
-                            type: 'datetime',
-                        },
-                        yaxis: {
-                            opposite: true
-                        },
-                        legend: {
-                            horizontalAlign: 'left'
-                        }
-                    }).render();
-                });
-            </script>
-            <!-- End Area Chart -->
-
+                        }).render();
+                    });
+                </script>
+            </div>
         </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">LNST của CĐ cty mẹ</h5>
-            <div id="areaChart"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const series = {
-                        "monthDataSeries1": {
-                            "prices": [
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9340.85
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries2": {
-                            "prices": [
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9040.85,
-                                8340.7,
-                                8165.5,
-                                8122.9,
-                                8107.85,
-                                8128.0
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries3": {
-                            "prices": [
-                                7114.25,
-                                7126.6,
-                                7116.95,
-                                7203.7,
-                                7233.75,
-                                7451.0,
-                                7381.15,
-                                7348.95,
-                                7347.75,
-                                7311.25,
-                                7266.4,
-                                7253.25,
-                                7215.45,
-                                7266.35,
-                                7315.25,
-                                7237.2,
-                                7191.4,
-                                7238.95,
-                                7222.6,
-                                7217.9,
-                                7359.3,
-                                7371.55,
-                                7371.15,
-                                7469.2,
-                                7429.25,
-                                7434.65,
-                                7451.1,
-                                7475.25,
-                                7566.25,
-                                7556.8,
-                                7525.55,
-                                7555.45,
-                                7560.9,
-                                7490.7,
-                                7527.6,
-                                7551.9,
-                                7514.85,
-                                7577.95,
-                                7592.3,
-                                7621.95,
-                                7707.95,
-                                7859.1,
-                                7815.7,
-                                7739.0,
-                                7778.7,
-                                7839.45,
-                                7756.45,
-                                7669.2,
-                                7580.45,
-                                7452.85,
-                                7617.25,
-                                7701.6,
-                                7606.8,
-                                7620.05,
-                                7513.85,
-                                7498.45,
-                                7575.45,
-                                7601.95,
-                                7589.1,
-                                7525.85,
-                                7569.5,
-                                7702.5,
-                                7812.7,
-                                7803.75,
-                                7816.3,
-                                7851.15,
-                                7912.2,
-                                7972.8,
-                                8145.0,
-                                8161.1,
-                                8121.05,
-                                8071.25,
-                                8088.2,
-                                8154.45,
-                                8148.3,
-                                8122.05,
-                                8132.65,
-                                8074.55,
-                                7952.8,
-                                7885.55,
-                                7733.9,
-                                7897.15,
-                                7973.15,
-                                7888.5,
-                                7842.8,
-                                7838.4,
-                                7909.85,
-                                7892.75,
-                                7897.75,
-                                7820.05,
-                                7904.4,
-                                7872.2,
-                                7847.5,
-                                7849.55,
-                                7789.6,
-                                7736.35,
-                                7819.4,
-                                7875.35,
-                                7871.8,
-                                8076.5,
-                                8114.8,
-                                8193.55,
-                                8217.1,
-                                8235.05,
-                                8215.3,
-                                8216.4,
-                                8301.55,
-                                8235.25,
-                                8229.75,
-                                8201.95,
-                                8164.95,
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2
-                            ],
-                            "dates": [
-                                "02 Jun 2017",
-                                "05 Jun 2017",
-                                "06 Jun 2017",
-                                "07 Jun 2017",
-                                "08 Jun 2017",
-                                "09 Jun 2017",
-                                "12 Jun 2017",
-                                "13 Jun 2017",
-                                "14 Jun 2017",
-                                "15 Jun 2017",
-                                "16 Jun 2017",
-                                "19 Jun 2017",
-                                "20 Jun 2017",
-                                "21 Jun 2017",
-                                "22 Jun 2017",
-                                "23 Jun 2017",
-                                "27 Jun 2017",
-                                "28 Jun 2017",
-                                "29 Jun 2017",
-                                "30 Jun 2017",
-                                "03 Jul 2017",
-                                "04 Jul 2017",
-                                "05 Jul 2017",
-                                "06 Jul 2017",
-                                "07 Jul 2017",
-                                "10 Jul 2017",
-                                "11 Jul 2017",
-                                "12 Jul 2017",
-                                "13 Jul 2017",
-                                "14 Jul 2017",
-                                "17 Jul 2017",
-                                "18 Jul 2017",
-                                "19 Jul 2017",
-                                "20 Jul 2017",
-                                "21 Jul 2017",
-                                "24 Jul 2017",
-                                "25 Jul 2017",
-                                "26 Jul 2017",
-                                "27 Jul 2017",
-                                "28 Jul 2017",
-                                "31 Jul 2017",
-                                "01 Aug 2017",
-                                "02 Aug 2017",
-                                "03 Aug 2017",
-                                "04 Aug 2017",
-                                "07 Aug 2017",
-                                "08 Aug 2017",
-                                "09 Aug 2017",
-                                "10 Aug 2017",
-                                "11 Aug 2017",
-                                "14 Aug 2017",
-                                "16 Aug 2017",
-                                "17 Aug 2017",
-                                "18 Aug 2017",
-                                "21 Aug 2017",
-                                "22 Aug 2017",
-                                "23 Aug 2017",
-                                "24 Aug 2017",
-                                "28 Aug 2017",
-                                "29 Aug 2017",
-                                "30 Aug 2017",
-                                "31 Aug 2017",
-                                "01 Sep 2017",
-                                "04 Sep 2017",
-                                "05 Sep 2017",
-                                "06 Sep 2017",
-                                "07 Sep 2017",
-                                "08 Sep 2017",
-                                "11 Sep 2017",
-                                "12 Sep 2017",
-                                "13 Sep 2017",
-                                "14 Sep 2017",
-                                "15 Sep 2017",
-                                "18 Sep 2017",
-                                "19 Sep 2017",
-                                "20 Sep 2017",
-                                "21 Sep 2017",
-                                "22 Sep 2017",
-                                "25 Sep 2017",
-                                "26 Sep 2017",
-                                "27 Sep 2017",
-                                "28 Sep 2017",
-                                "29 Sep 2017",
-                                "03 Oct 2017",
-                                "04 Oct 2017",
-                                "05 Oct 2017",
-                                "06 Oct 2017",
-                                "09 Oct 2017",
-                                "10 Oct 2017",
-                                "11 Oct 2017",
-                                "12 Oct 2017",
-                                "13 Oct 2017",
-                                "16 Oct 2017",
-                                "17 Oct 2017",
-                                "18 Oct 2017",
-                                "19 Oct 2017",
-                                "23 Oct 2017",
-                                "24 Oct 2017",
-                                "25 Oct 2017",
-                                "26 Oct 2017",
-                                "27 Oct 2017",
-                                "30 Oct 2017",
-                                "31 Oct 2017",
-                                "01 Nov 2017",
-                                "02 Nov 2017",
-                                "03 Nov 2017",
-                                "06 Nov 2017",
-                                "07 Nov 2017",
-                                "08 Nov 2017",
-                                "09 Nov 2017",
-                                "10 Nov 2017",
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017"
-                            ]
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">LN thuần từ HĐKD</h5>
+                <div id="lnthuantuhdkd"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_loi_nhuan_thuan_tu_hoat_dong_kinh_doanh'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
                         }
-                    }
-                    new ApexCharts(document.querySelector("#areaChart"), {
-                        series: [{
-                            name: "STOCK ABC",
-                            data: series.monthDataSeries1.prices
-                        }],
-                        chart: {
-                            type: 'area',
-                            height: 350,
-                            zoom: {
+                        new ApexCharts(document.querySelector("#lnthuantuhdkd"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
                                 enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
                             }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'straight'
-                        },
-                        subtitle: {
-                            text: 'Price Movements',
-                            align: 'left'
-                        },
-                        labels: series.monthDataSeries1.dates,
-                        xaxis: {
-                            type: 'datetime',
-                        },
-                        yaxis: {
-                            opposite: true
-                        },
-                        legend: {
-                            horizontalAlign: 'left'
-                        }
-                    }).render();
-                });
-            </script>
-            <!-- End Area Chart -->
-
+                        }).render();
+                    });
+                </script>
+            </div>
         </div>
-    </div>
-
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Tài sản ngắn hạn</h5>
-            <div id="areaChart"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const series = {
-                        "monthDataSeries1": {
-                            "prices": [
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9340.85
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries2": {
-                            "prices": [
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9040.85,
-                                8340.7,
-                                8165.5,
-                                8122.9,
-                                8107.85,
-                                8128.0
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries3": {
-                            "prices": [
-                                7114.25,
-                                7126.6,
-                                7116.95,
-                                7203.7,
-                                7233.75,
-                                7451.0,
-                                7381.15,
-                                7348.95,
-                                7347.75,
-                                7311.25,
-                                7266.4,
-                                7253.25,
-                                7215.45,
-                                7266.35,
-                                7315.25,
-                                7237.2,
-                                7191.4,
-                                7238.95,
-                                7222.6,
-                                7217.9,
-                                7359.3,
-                                7371.55,
-                                7371.15,
-                                7469.2,
-                                7429.25,
-                                7434.65,
-                                7451.1,
-                                7475.25,
-                                7566.25,
-                                7556.8,
-                                7525.55,
-                                7555.45,
-                                7560.9,
-                                7490.7,
-                                7527.6,
-                                7551.9,
-                                7514.85,
-                                7577.95,
-                                7592.3,
-                                7621.95,
-                                7707.95,
-                                7859.1,
-                                7815.7,
-                                7739.0,
-                                7778.7,
-                                7839.45,
-                                7756.45,
-                                7669.2,
-                                7580.45,
-                                7452.85,
-                                7617.25,
-                                7701.6,
-                                7606.8,
-                                7620.05,
-                                7513.85,
-                                7498.45,
-                                7575.45,
-                                7601.95,
-                                7589.1,
-                                7525.85,
-                                7569.5,
-                                7702.5,
-                                7812.7,
-                                7803.75,
-                                7816.3,
-                                7851.15,
-                                7912.2,
-                                7972.8,
-                                8145.0,
-                                8161.1,
-                                8121.05,
-                                8071.25,
-                                8088.2,
-                                8154.45,
-                                8148.3,
-                                8122.05,
-                                8132.65,
-                                8074.55,
-                                7952.8,
-                                7885.55,
-                                7733.9,
-                                7897.15,
-                                7973.15,
-                                7888.5,
-                                7842.8,
-                                7838.4,
-                                7909.85,
-                                7892.75,
-                                7897.75,
-                                7820.05,
-                                7904.4,
-                                7872.2,
-                                7847.5,
-                                7849.55,
-                                7789.6,
-                                7736.35,
-                                7819.4,
-                                7875.35,
-                                7871.8,
-                                8076.5,
-                                8114.8,
-                                8193.55,
-                                8217.1,
-                                8235.05,
-                                8215.3,
-                                8216.4,
-                                8301.55,
-                                8235.25,
-                                8229.75,
-                                8201.95,
-                                8164.95,
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2
-                            ],
-                            "dates": [
-                                "02 Jun 2017",
-                                "05 Jun 2017",
-                                "06 Jun 2017",
-                                "07 Jun 2017",
-                                "08 Jun 2017",
-                                "09 Jun 2017",
-                                "12 Jun 2017",
-                                "13 Jun 2017",
-                                "14 Jun 2017",
-                                "15 Jun 2017",
-                                "16 Jun 2017",
-                                "19 Jun 2017",
-                                "20 Jun 2017",
-                                "21 Jun 2017",
-                                "22 Jun 2017",
-                                "23 Jun 2017",
-                                "27 Jun 2017",
-                                "28 Jun 2017",
-                                "29 Jun 2017",
-                                "30 Jun 2017",
-                                "03 Jul 2017",
-                                "04 Jul 2017",
-                                "05 Jul 2017",
-                                "06 Jul 2017",
-                                "07 Jul 2017",
-                                "10 Jul 2017",
-                                "11 Jul 2017",
-                                "12 Jul 2017",
-                                "13 Jul 2017",
-                                "14 Jul 2017",
-                                "17 Jul 2017",
-                                "18 Jul 2017",
-                                "19 Jul 2017",
-                                "20 Jul 2017",
-                                "21 Jul 2017",
-                                "24 Jul 2017",
-                                "25 Jul 2017",
-                                "26 Jul 2017",
-                                "27 Jul 2017",
-                                "28 Jul 2017",
-                                "31 Jul 2017",
-                                "01 Aug 2017",
-                                "02 Aug 2017",
-                                "03 Aug 2017",
-                                "04 Aug 2017",
-                                "07 Aug 2017",
-                                "08 Aug 2017",
-                                "09 Aug 2017",
-                                "10 Aug 2017",
-                                "11 Aug 2017",
-                                "14 Aug 2017",
-                                "16 Aug 2017",
-                                "17 Aug 2017",
-                                "18 Aug 2017",
-                                "21 Aug 2017",
-                                "22 Aug 2017",
-                                "23 Aug 2017",
-                                "24 Aug 2017",
-                                "28 Aug 2017",
-                                "29 Aug 2017",
-                                "30 Aug 2017",
-                                "31 Aug 2017",
-                                "01 Sep 2017",
-                                "04 Sep 2017",
-                                "05 Sep 2017",
-                                "06 Sep 2017",
-                                "07 Sep 2017",
-                                "08 Sep 2017",
-                                "11 Sep 2017",
-                                "12 Sep 2017",
-                                "13 Sep 2017",
-                                "14 Sep 2017",
-                                "15 Sep 2017",
-                                "18 Sep 2017",
-                                "19 Sep 2017",
-                                "20 Sep 2017",
-                                "21 Sep 2017",
-                                "22 Sep 2017",
-                                "25 Sep 2017",
-                                "26 Sep 2017",
-                                "27 Sep 2017",
-                                "28 Sep 2017",
-                                "29 Sep 2017",
-                                "03 Oct 2017",
-                                "04 Oct 2017",
-                                "05 Oct 2017",
-                                "06 Oct 2017",
-                                "09 Oct 2017",
-                                "10 Oct 2017",
-                                "11 Oct 2017",
-                                "12 Oct 2017",
-                                "13 Oct 2017",
-                                "16 Oct 2017",
-                                "17 Oct 2017",
-                                "18 Oct 2017",
-                                "19 Oct 2017",
-                                "23 Oct 2017",
-                                "24 Oct 2017",
-                                "25 Oct 2017",
-                                "26 Oct 2017",
-                                "27 Oct 2017",
-                                "30 Oct 2017",
-                                "31 Oct 2017",
-                                "01 Nov 2017",
-                                "02 Nov 2017",
-                                "03 Nov 2017",
-                                "06 Nov 2017",
-                                "07 Nov 2017",
-                                "08 Nov 2017",
-                                "09 Nov 2017",
-                                "10 Nov 2017",
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017"
-                            ]
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">LNST thu nhập DN</h5>
+                <div id="lnstthunhapdn"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_loi_nhuan_sau_thue_thu_nhap_doanh_nghiep'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
                         }
-                    }
-                    new ApexCharts(document.querySelector("#areaChart"), {
-                        series: [{
-                            name: "STOCK ABC",
-                            data: series.monthDataSeries1.prices
-                        }],
-                        chart: {
-                            type: 'area',
-                            height: 350,
-                            zoom: {
+                        new ApexCharts(document.querySelector("#lnstthunhapdn"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
                                 enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
                             }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'straight'
-                        },
-                        subtitle: {
-                            text: 'Price Movements',
-                            align: 'left'
-                        },
-                        labels: series.monthDataSeries1.dates,
-                        xaxis: {
-                            type: 'datetime',
-                        },
-                        yaxis: {
-                            opposite: true
-                        },
-                        legend: {
-                            horizontalAlign: 'left'
-                        }
-                    }).render();
-                });
-            </script>
-            <!-- End Area Chart -->
-
+                        }).render();
+                    });
+                </script>
+            </div>
         </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Tổng tài sản</h5>
-            <div id="areaChart"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const series = {
-                        "monthDataSeries1": {
-                            "prices": [
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9340.85
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries2": {
-                            "prices": [
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9040.85,
-                                8340.7,
-                                8165.5,
-                                8122.9,
-                                8107.85,
-                                8128.0
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries3": {
-                            "prices": [
-                                7114.25,
-                                7126.6,
-                                7116.95,
-                                7203.7,
-                                7233.75,
-                                7451.0,
-                                7381.15,
-                                7348.95,
-                                7347.75,
-                                7311.25,
-                                7266.4,
-                                7253.25,
-                                7215.45,
-                                7266.35,
-                                7315.25,
-                                7237.2,
-                                7191.4,
-                                7238.95,
-                                7222.6,
-                                7217.9,
-                                7359.3,
-                                7371.55,
-                                7371.15,
-                                7469.2,
-                                7429.25,
-                                7434.65,
-                                7451.1,
-                                7475.25,
-                                7566.25,
-                                7556.8,
-                                7525.55,
-                                7555.45,
-                                7560.9,
-                                7490.7,
-                                7527.6,
-                                7551.9,
-                                7514.85,
-                                7577.95,
-                                7592.3,
-                                7621.95,
-                                7707.95,
-                                7859.1,
-                                7815.7,
-                                7739.0,
-                                7778.7,
-                                7839.45,
-                                7756.45,
-                                7669.2,
-                                7580.45,
-                                7452.85,
-                                7617.25,
-                                7701.6,
-                                7606.8,
-                                7620.05,
-                                7513.85,
-                                7498.45,
-                                7575.45,
-                                7601.95,
-                                7589.1,
-                                7525.85,
-                                7569.5,
-                                7702.5,
-                                7812.7,
-                                7803.75,
-                                7816.3,
-                                7851.15,
-                                7912.2,
-                                7972.8,
-                                8145.0,
-                                8161.1,
-                                8121.05,
-                                8071.25,
-                                8088.2,
-                                8154.45,
-                                8148.3,
-                                8122.05,
-                                8132.65,
-                                8074.55,
-                                7952.8,
-                                7885.55,
-                                7733.9,
-                                7897.15,
-                                7973.15,
-                                7888.5,
-                                7842.8,
-                                7838.4,
-                                7909.85,
-                                7892.75,
-                                7897.75,
-                                7820.05,
-                                7904.4,
-                                7872.2,
-                                7847.5,
-                                7849.55,
-                                7789.6,
-                                7736.35,
-                                7819.4,
-                                7875.35,
-                                7871.8,
-                                8076.5,
-                                8114.8,
-                                8193.55,
-                                8217.1,
-                                8235.05,
-                                8215.3,
-                                8216.4,
-                                8301.55,
-                                8235.25,
-                                8229.75,
-                                8201.95,
-                                8164.95,
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2
-                            ],
-                            "dates": [
-                                "02 Jun 2017",
-                                "05 Jun 2017",
-                                "06 Jun 2017",
-                                "07 Jun 2017",
-                                "08 Jun 2017",
-                                "09 Jun 2017",
-                                "12 Jun 2017",
-                                "13 Jun 2017",
-                                "14 Jun 2017",
-                                "15 Jun 2017",
-                                "16 Jun 2017",
-                                "19 Jun 2017",
-                                "20 Jun 2017",
-                                "21 Jun 2017",
-                                "22 Jun 2017",
-                                "23 Jun 2017",
-                                "27 Jun 2017",
-                                "28 Jun 2017",
-                                "29 Jun 2017",
-                                "30 Jun 2017",
-                                "03 Jul 2017",
-                                "04 Jul 2017",
-                                "05 Jul 2017",
-                                "06 Jul 2017",
-                                "07 Jul 2017",
-                                "10 Jul 2017",
-                                "11 Jul 2017",
-                                "12 Jul 2017",
-                                "13 Jul 2017",
-                                "14 Jul 2017",
-                                "17 Jul 2017",
-                                "18 Jul 2017",
-                                "19 Jul 2017",
-                                "20 Jul 2017",
-                                "21 Jul 2017",
-                                "24 Jul 2017",
-                                "25 Jul 2017",
-                                "26 Jul 2017",
-                                "27 Jul 2017",
-                                "28 Jul 2017",
-                                "31 Jul 2017",
-                                "01 Aug 2017",
-                                "02 Aug 2017",
-                                "03 Aug 2017",
-                                "04 Aug 2017",
-                                "07 Aug 2017",
-                                "08 Aug 2017",
-                                "09 Aug 2017",
-                                "10 Aug 2017",
-                                "11 Aug 2017",
-                                "14 Aug 2017",
-                                "16 Aug 2017",
-                                "17 Aug 2017",
-                                "18 Aug 2017",
-                                "21 Aug 2017",
-                                "22 Aug 2017",
-                                "23 Aug 2017",
-                                "24 Aug 2017",
-                                "28 Aug 2017",
-                                "29 Aug 2017",
-                                "30 Aug 2017",
-                                "31 Aug 2017",
-                                "01 Sep 2017",
-                                "04 Sep 2017",
-                                "05 Sep 2017",
-                                "06 Sep 2017",
-                                "07 Sep 2017",
-                                "08 Sep 2017",
-                                "11 Sep 2017",
-                                "12 Sep 2017",
-                                "13 Sep 2017",
-                                "14 Sep 2017",
-                                "15 Sep 2017",
-                                "18 Sep 2017",
-                                "19 Sep 2017",
-                                "20 Sep 2017",
-                                "21 Sep 2017",
-                                "22 Sep 2017",
-                                "25 Sep 2017",
-                                "26 Sep 2017",
-                                "27 Sep 2017",
-                                "28 Sep 2017",
-                                "29 Sep 2017",
-                                "03 Oct 2017",
-                                "04 Oct 2017",
-                                "05 Oct 2017",
-                                "06 Oct 2017",
-                                "09 Oct 2017",
-                                "10 Oct 2017",
-                                "11 Oct 2017",
-                                "12 Oct 2017",
-                                "13 Oct 2017",
-                                "16 Oct 2017",
-                                "17 Oct 2017",
-                                "18 Oct 2017",
-                                "19 Oct 2017",
-                                "23 Oct 2017",
-                                "24 Oct 2017",
-                                "25 Oct 2017",
-                                "26 Oct 2017",
-                                "27 Oct 2017",
-                                "30 Oct 2017",
-                                "31 Oct 2017",
-                                "01 Nov 2017",
-                                "02 Nov 2017",
-                                "03 Nov 2017",
-                                "06 Nov 2017",
-                                "07 Nov 2017",
-                                "08 Nov 2017",
-                                "09 Nov 2017",
-                                "10 Nov 2017",
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017"
-                            ]
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">LNST của CĐ cty mẹ</h5>
+                <div id="lnstcuacdctyme"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_loi_nhuan_sau_thue_cua_co_dong_cong_ty_me'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
                         }
-                    }
-                    new ApexCharts(document.querySelector("#areaChart"), {
-                        series: [{
-                            name: "STOCK ABC",
-                            data: series.monthDataSeries1.prices
-                        }],
-                        chart: {
-                            type: 'area',
-                            height: 350,
-                            zoom: {
+                        new ApexCharts(document.querySelector("#lnstcuacdctyme"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
                                 enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
                             }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'straight'
-                        },
-                        subtitle: {
-                            text: 'Price Movements',
-                            align: 'left'
-                        },
-                        labels: series.monthDataSeries1.dates,
-                        xaxis: {
-                            type: 'datetime',
-                        },
-                        yaxis: {
-                            opposite: true
-                        },
-                        legend: {
-                            horizontalAlign: 'left'
-                        }
-                    }).render();
-                });
-            </script>
-            <!-- End Area Chart -->
-
+                        }).render();
+                    });
+                </script>
+            </div>
         </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Nợ phải trả</h5>
-            <div id="areaChart"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const series = {
-                        "monthDataSeries1": {
-                            "prices": [
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9340.85
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries2": {
-                            "prices": [
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9040.85,
-                                8340.7,
-                                8165.5,
-                                8122.9,
-                                8107.85,
-                                8128.0
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries3": {
-                            "prices": [
-                                7114.25,
-                                7126.6,
-                                7116.95,
-                                7203.7,
-                                7233.75,
-                                7451.0,
-                                7381.15,
-                                7348.95,
-                                7347.75,
-                                7311.25,
-                                7266.4,
-                                7253.25,
-                                7215.45,
-                                7266.35,
-                                7315.25,
-                                7237.2,
-                                7191.4,
-                                7238.95,
-                                7222.6,
-                                7217.9,
-                                7359.3,
-                                7371.55,
-                                7371.15,
-                                7469.2,
-                                7429.25,
-                                7434.65,
-                                7451.1,
-                                7475.25,
-                                7566.25,
-                                7556.8,
-                                7525.55,
-                                7555.45,
-                                7560.9,
-                                7490.7,
-                                7527.6,
-                                7551.9,
-                                7514.85,
-                                7577.95,
-                                7592.3,
-                                7621.95,
-                                7707.95,
-                                7859.1,
-                                7815.7,
-                                7739.0,
-                                7778.7,
-                                7839.45,
-                                7756.45,
-                                7669.2,
-                                7580.45,
-                                7452.85,
-                                7617.25,
-                                7701.6,
-                                7606.8,
-                                7620.05,
-                                7513.85,
-                                7498.45,
-                                7575.45,
-                                7601.95,
-                                7589.1,
-                                7525.85,
-                                7569.5,
-                                7702.5,
-                                7812.7,
-                                7803.75,
-                                7816.3,
-                                7851.15,
-                                7912.2,
-                                7972.8,
-                                8145.0,
-                                8161.1,
-                                8121.05,
-                                8071.25,
-                                8088.2,
-                                8154.45,
-                                8148.3,
-                                8122.05,
-                                8132.65,
-                                8074.55,
-                                7952.8,
-                                7885.55,
-                                7733.9,
-                                7897.15,
-                                7973.15,
-                                7888.5,
-                                7842.8,
-                                7838.4,
-                                7909.85,
-                                7892.75,
-                                7897.75,
-                                7820.05,
-                                7904.4,
-                                7872.2,
-                                7847.5,
-                                7849.55,
-                                7789.6,
-                                7736.35,
-                                7819.4,
-                                7875.35,
-                                7871.8,
-                                8076.5,
-                                8114.8,
-                                8193.55,
-                                8217.1,
-                                8235.05,
-                                8215.3,
-                                8216.4,
-                                8301.55,
-                                8235.25,
-                                8229.75,
-                                8201.95,
-                                8164.95,
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2
-                            ],
-                            "dates": [
-                                "02 Jun 2017",
-                                "05 Jun 2017",
-                                "06 Jun 2017",
-                                "07 Jun 2017",
-                                "08 Jun 2017",
-                                "09 Jun 2017",
-                                "12 Jun 2017",
-                                "13 Jun 2017",
-                                "14 Jun 2017",
-                                "15 Jun 2017",
-                                "16 Jun 2017",
-                                "19 Jun 2017",
-                                "20 Jun 2017",
-                                "21 Jun 2017",
-                                "22 Jun 2017",
-                                "23 Jun 2017",
-                                "27 Jun 2017",
-                                "28 Jun 2017",
-                                "29 Jun 2017",
-                                "30 Jun 2017",
-                                "03 Jul 2017",
-                                "04 Jul 2017",
-                                "05 Jul 2017",
-                                "06 Jul 2017",
-                                "07 Jul 2017",
-                                "10 Jul 2017",
-                                "11 Jul 2017",
-                                "12 Jul 2017",
-                                "13 Jul 2017",
-                                "14 Jul 2017",
-                                "17 Jul 2017",
-                                "18 Jul 2017",
-                                "19 Jul 2017",
-                                "20 Jul 2017",
-                                "21 Jul 2017",
-                                "24 Jul 2017",
-                                "25 Jul 2017",
-                                "26 Jul 2017",
-                                "27 Jul 2017",
-                                "28 Jul 2017",
-                                "31 Jul 2017",
-                                "01 Aug 2017",
-                                "02 Aug 2017",
-                                "03 Aug 2017",
-                                "04 Aug 2017",
-                                "07 Aug 2017",
-                                "08 Aug 2017",
-                                "09 Aug 2017",
-                                "10 Aug 2017",
-                                "11 Aug 2017",
-                                "14 Aug 2017",
-                                "16 Aug 2017",
-                                "17 Aug 2017",
-                                "18 Aug 2017",
-                                "21 Aug 2017",
-                                "22 Aug 2017",
-                                "23 Aug 2017",
-                                "24 Aug 2017",
-                                "28 Aug 2017",
-                                "29 Aug 2017",
-                                "30 Aug 2017",
-                                "31 Aug 2017",
-                                "01 Sep 2017",
-                                "04 Sep 2017",
-                                "05 Sep 2017",
-                                "06 Sep 2017",
-                                "07 Sep 2017",
-                                "08 Sep 2017",
-                                "11 Sep 2017",
-                                "12 Sep 2017",
-                                "13 Sep 2017",
-                                "14 Sep 2017",
-                                "15 Sep 2017",
-                                "18 Sep 2017",
-                                "19 Sep 2017",
-                                "20 Sep 2017",
-                                "21 Sep 2017",
-                                "22 Sep 2017",
-                                "25 Sep 2017",
-                                "26 Sep 2017",
-                                "27 Sep 2017",
-                                "28 Sep 2017",
-                                "29 Sep 2017",
-                                "03 Oct 2017",
-                                "04 Oct 2017",
-                                "05 Oct 2017",
-                                "06 Oct 2017",
-                                "09 Oct 2017",
-                                "10 Oct 2017",
-                                "11 Oct 2017",
-                                "12 Oct 2017",
-                                "13 Oct 2017",
-                                "16 Oct 2017",
-                                "17 Oct 2017",
-                                "18 Oct 2017",
-                                "19 Oct 2017",
-                                "23 Oct 2017",
-                                "24 Oct 2017",
-                                "25 Oct 2017",
-                                "26 Oct 2017",
-                                "27 Oct 2017",
-                                "30 Oct 2017",
-                                "31 Oct 2017",
-                                "01 Nov 2017",
-                                "02 Nov 2017",
-                                "03 Nov 2017",
-                                "06 Nov 2017",
-                                "07 Nov 2017",
-                                "08 Nov 2017",
-                                "09 Nov 2017",
-                                "10 Nov 2017",
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017"
-                            ]
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Tài sản ngắn hạn</h5>
+                <div id="taisannganhan"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_tai_san_ngan_han'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
                         }
-                    }
-                    new ApexCharts(document.querySelector("#areaChart"), {
-                        series: [{
-                            name: "STOCK ABC",
-                            data: series.monthDataSeries1.prices
-                        }],
-                        chart: {
-                            type: 'area',
-                            height: 350,
-                            zoom: {
+                        new ApexCharts(document.querySelector("#taisannganhan"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
                                 enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
                             }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'straight'
-                        },
-                        subtitle: {
-                            text: 'Price Movements',
-                            align: 'left'
-                        },
-                        labels: series.monthDataSeries1.dates,
-                        xaxis: {
-                            type: 'datetime',
-                        },
-                        yaxis: {
-                            opposite: true
-                        },
-                        legend: {
-                            horizontalAlign: 'left'
-                        }
-                    }).render();
-                });
-            </script>
-            <!-- End Area Chart -->
-
+                        }).render();
+                    });
+                </script>
+            </div>
         </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Nợ ngắn hạn</h5>
-            <div id="areaChart"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const series = {
-                        "monthDataSeries1": {
-                            "prices": [
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9340.85
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries2": {
-                            "prices": [
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9040.85,
-                                8340.7,
-                                8165.5,
-                                8122.9,
-                                8107.85,
-                                8128.0
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries3": {
-                            "prices": [
-                                7114.25,
-                                7126.6,
-                                7116.95,
-                                7203.7,
-                                7233.75,
-                                7451.0,
-                                7381.15,
-                                7348.95,
-                                7347.75,
-                                7311.25,
-                                7266.4,
-                                7253.25,
-                                7215.45,
-                                7266.35,
-                                7315.25,
-                                7237.2,
-                                7191.4,
-                                7238.95,
-                                7222.6,
-                                7217.9,
-                                7359.3,
-                                7371.55,
-                                7371.15,
-                                7469.2,
-                                7429.25,
-                                7434.65,
-                                7451.1,
-                                7475.25,
-                                7566.25,
-                                7556.8,
-                                7525.55,
-                                7555.45,
-                                7560.9,
-                                7490.7,
-                                7527.6,
-                                7551.9,
-                                7514.85,
-                                7577.95,
-                                7592.3,
-                                7621.95,
-                                7707.95,
-                                7859.1,
-                                7815.7,
-                                7739.0,
-                                7778.7,
-                                7839.45,
-                                7756.45,
-                                7669.2,
-                                7580.45,
-                                7452.85,
-                                7617.25,
-                                7701.6,
-                                7606.8,
-                                7620.05,
-                                7513.85,
-                                7498.45,
-                                7575.45,
-                                7601.95,
-                                7589.1,
-                                7525.85,
-                                7569.5,
-                                7702.5,
-                                7812.7,
-                                7803.75,
-                                7816.3,
-                                7851.15,
-                                7912.2,
-                                7972.8,
-                                8145.0,
-                                8161.1,
-                                8121.05,
-                                8071.25,
-                                8088.2,
-                                8154.45,
-                                8148.3,
-                                8122.05,
-                                8132.65,
-                                8074.55,
-                                7952.8,
-                                7885.55,
-                                7733.9,
-                                7897.15,
-                                7973.15,
-                                7888.5,
-                                7842.8,
-                                7838.4,
-                                7909.85,
-                                7892.75,
-                                7897.75,
-                                7820.05,
-                                7904.4,
-                                7872.2,
-                                7847.5,
-                                7849.55,
-                                7789.6,
-                                7736.35,
-                                7819.4,
-                                7875.35,
-                                7871.8,
-                                8076.5,
-                                8114.8,
-                                8193.55,
-                                8217.1,
-                                8235.05,
-                                8215.3,
-                                8216.4,
-                                8301.55,
-                                8235.25,
-                                8229.75,
-                                8201.95,
-                                8164.95,
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2
-                            ],
-                            "dates": [
-                                "02 Jun 2017",
-                                "05 Jun 2017",
-                                "06 Jun 2017",
-                                "07 Jun 2017",
-                                "08 Jun 2017",
-                                "09 Jun 2017",
-                                "12 Jun 2017",
-                                "13 Jun 2017",
-                                "14 Jun 2017",
-                                "15 Jun 2017",
-                                "16 Jun 2017",
-                                "19 Jun 2017",
-                                "20 Jun 2017",
-                                "21 Jun 2017",
-                                "22 Jun 2017",
-                                "23 Jun 2017",
-                                "27 Jun 2017",
-                                "28 Jun 2017",
-                                "29 Jun 2017",
-                                "30 Jun 2017",
-                                "03 Jul 2017",
-                                "04 Jul 2017",
-                                "05 Jul 2017",
-                                "06 Jul 2017",
-                                "07 Jul 2017",
-                                "10 Jul 2017",
-                                "11 Jul 2017",
-                                "12 Jul 2017",
-                                "13 Jul 2017",
-                                "14 Jul 2017",
-                                "17 Jul 2017",
-                                "18 Jul 2017",
-                                "19 Jul 2017",
-                                "20 Jul 2017",
-                                "21 Jul 2017",
-                                "24 Jul 2017",
-                                "25 Jul 2017",
-                                "26 Jul 2017",
-                                "27 Jul 2017",
-                                "28 Jul 2017",
-                                "31 Jul 2017",
-                                "01 Aug 2017",
-                                "02 Aug 2017",
-                                "03 Aug 2017",
-                                "04 Aug 2017",
-                                "07 Aug 2017",
-                                "08 Aug 2017",
-                                "09 Aug 2017",
-                                "10 Aug 2017",
-                                "11 Aug 2017",
-                                "14 Aug 2017",
-                                "16 Aug 2017",
-                                "17 Aug 2017",
-                                "18 Aug 2017",
-                                "21 Aug 2017",
-                                "22 Aug 2017",
-                                "23 Aug 2017",
-                                "24 Aug 2017",
-                                "28 Aug 2017",
-                                "29 Aug 2017",
-                                "30 Aug 2017",
-                                "31 Aug 2017",
-                                "01 Sep 2017",
-                                "04 Sep 2017",
-                                "05 Sep 2017",
-                                "06 Sep 2017",
-                                "07 Sep 2017",
-                                "08 Sep 2017",
-                                "11 Sep 2017",
-                                "12 Sep 2017",
-                                "13 Sep 2017",
-                                "14 Sep 2017",
-                                "15 Sep 2017",
-                                "18 Sep 2017",
-                                "19 Sep 2017",
-                                "20 Sep 2017",
-                                "21 Sep 2017",
-                                "22 Sep 2017",
-                                "25 Sep 2017",
-                                "26 Sep 2017",
-                                "27 Sep 2017",
-                                "28 Sep 2017",
-                                "29 Sep 2017",
-                                "03 Oct 2017",
-                                "04 Oct 2017",
-                                "05 Oct 2017",
-                                "06 Oct 2017",
-                                "09 Oct 2017",
-                                "10 Oct 2017",
-                                "11 Oct 2017",
-                                "12 Oct 2017",
-                                "13 Oct 2017",
-                                "16 Oct 2017",
-                                "17 Oct 2017",
-                                "18 Oct 2017",
-                                "19 Oct 2017",
-                                "23 Oct 2017",
-                                "24 Oct 2017",
-                                "25 Oct 2017",
-                                "26 Oct 2017",
-                                "27 Oct 2017",
-                                "30 Oct 2017",
-                                "31 Oct 2017",
-                                "01 Nov 2017",
-                                "02 Nov 2017",
-                                "03 Nov 2017",
-                                "06 Nov 2017",
-                                "07 Nov 2017",
-                                "08 Nov 2017",
-                                "09 Nov 2017",
-                                "10 Nov 2017",
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017"
-                            ]
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Tổng tài sản</h5>
+                <div id="tongtaisan"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_tong_tai_san'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
                         }
-                    }
-                    new ApexCharts(document.querySelector("#areaChart"), {
-                        series: [{
-                            name: "STOCK ABC",
-                            data: series.monthDataSeries1.prices
-                        }],
-                        chart: {
-                            type: 'area',
-                            height: 350,
-                            zoom: {
+                        new ApexCharts(document.querySelector("#tongtaisan"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
                                 enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
                             }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'straight'
-                        },
-                        subtitle: {
-                            text: 'Price Movements',
-                            align: 'left'
-                        },
-                        labels: series.monthDataSeries1.dates,
-                        xaxis: {
-                            type: 'datetime',
-                        },
-                        yaxis: {
-                            opposite: true
-                        },
-                        legend: {
-                            horizontalAlign: 'left'
-                        }
-                    }).render();
-                });
-            </script>
-            <!-- End Area Chart -->
-
+                        }).render();
+                    });
+                </script>
+            </div>
         </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Vốn chủ sở hữu</h5>
-            <div id="areaChart"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const series = {
-                        "monthDataSeries1": {
-                            "prices": [
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9340.85
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries2": {
-                            "prices": [
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9040.85,
-                                8340.7,
-                                8165.5,
-                                8122.9,
-                                8107.85,
-                                8128.0
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries3": {
-                            "prices": [
-                                7114.25,
-                                7126.6,
-                                7116.95,
-                                7203.7,
-                                7233.75,
-                                7451.0,
-                                7381.15,
-                                7348.95,
-                                7347.75,
-                                7311.25,
-                                7266.4,
-                                7253.25,
-                                7215.45,
-                                7266.35,
-                                7315.25,
-                                7237.2,
-                                7191.4,
-                                7238.95,
-                                7222.6,
-                                7217.9,
-                                7359.3,
-                                7371.55,
-                                7371.15,
-                                7469.2,
-                                7429.25,
-                                7434.65,
-                                7451.1,
-                                7475.25,
-                                7566.25,
-                                7556.8,
-                                7525.55,
-                                7555.45,
-                                7560.9,
-                                7490.7,
-                                7527.6,
-                                7551.9,
-                                7514.85,
-                                7577.95,
-                                7592.3,
-                                7621.95,
-                                7707.95,
-                                7859.1,
-                                7815.7,
-                                7739.0,
-                                7778.7,
-                                7839.45,
-                                7756.45,
-                                7669.2,
-                                7580.45,
-                                7452.85,
-                                7617.25,
-                                7701.6,
-                                7606.8,
-                                7620.05,
-                                7513.85,
-                                7498.45,
-                                7575.45,
-                                7601.95,
-                                7589.1,
-                                7525.85,
-                                7569.5,
-                                7702.5,
-                                7812.7,
-                                7803.75,
-                                7816.3,
-                                7851.15,
-                                7912.2,
-                                7972.8,
-                                8145.0,
-                                8161.1,
-                                8121.05,
-                                8071.25,
-                                8088.2,
-                                8154.45,
-                                8148.3,
-                                8122.05,
-                                8132.65,
-                                8074.55,
-                                7952.8,
-                                7885.55,
-                                7733.9,
-                                7897.15,
-                                7973.15,
-                                7888.5,
-                                7842.8,
-                                7838.4,
-                                7909.85,
-                                7892.75,
-                                7897.75,
-                                7820.05,
-                                7904.4,
-                                7872.2,
-                                7847.5,
-                                7849.55,
-                                7789.6,
-                                7736.35,
-                                7819.4,
-                                7875.35,
-                                7871.8,
-                                8076.5,
-                                8114.8,
-                                8193.55,
-                                8217.1,
-                                8235.05,
-                                8215.3,
-                                8216.4,
-                                8301.55,
-                                8235.25,
-                                8229.75,
-                                8201.95,
-                                8164.95,
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2
-                            ],
-                            "dates": [
-                                "02 Jun 2017",
-                                "05 Jun 2017",
-                                "06 Jun 2017",
-                                "07 Jun 2017",
-                                "08 Jun 2017",
-                                "09 Jun 2017",
-                                "12 Jun 2017",
-                                "13 Jun 2017",
-                                "14 Jun 2017",
-                                "15 Jun 2017",
-                                "16 Jun 2017",
-                                "19 Jun 2017",
-                                "20 Jun 2017",
-                                "21 Jun 2017",
-                                "22 Jun 2017",
-                                "23 Jun 2017",
-                                "27 Jun 2017",
-                                "28 Jun 2017",
-                                "29 Jun 2017",
-                                "30 Jun 2017",
-                                "03 Jul 2017",
-                                "04 Jul 2017",
-                                "05 Jul 2017",
-                                "06 Jul 2017",
-                                "07 Jul 2017",
-                                "10 Jul 2017",
-                                "11 Jul 2017",
-                                "12 Jul 2017",
-                                "13 Jul 2017",
-                                "14 Jul 2017",
-                                "17 Jul 2017",
-                                "18 Jul 2017",
-                                "19 Jul 2017",
-                                "20 Jul 2017",
-                                "21 Jul 2017",
-                                "24 Jul 2017",
-                                "25 Jul 2017",
-                                "26 Jul 2017",
-                                "27 Jul 2017",
-                                "28 Jul 2017",
-                                "31 Jul 2017",
-                                "01 Aug 2017",
-                                "02 Aug 2017",
-                                "03 Aug 2017",
-                                "04 Aug 2017",
-                                "07 Aug 2017",
-                                "08 Aug 2017",
-                                "09 Aug 2017",
-                                "10 Aug 2017",
-                                "11 Aug 2017",
-                                "14 Aug 2017",
-                                "16 Aug 2017",
-                                "17 Aug 2017",
-                                "18 Aug 2017",
-                                "21 Aug 2017",
-                                "22 Aug 2017",
-                                "23 Aug 2017",
-                                "24 Aug 2017",
-                                "28 Aug 2017",
-                                "29 Aug 2017",
-                                "30 Aug 2017",
-                                "31 Aug 2017",
-                                "01 Sep 2017",
-                                "04 Sep 2017",
-                                "05 Sep 2017",
-                                "06 Sep 2017",
-                                "07 Sep 2017",
-                                "08 Sep 2017",
-                                "11 Sep 2017",
-                                "12 Sep 2017",
-                                "13 Sep 2017",
-                                "14 Sep 2017",
-                                "15 Sep 2017",
-                                "18 Sep 2017",
-                                "19 Sep 2017",
-                                "20 Sep 2017",
-                                "21 Sep 2017",
-                                "22 Sep 2017",
-                                "25 Sep 2017",
-                                "26 Sep 2017",
-                                "27 Sep 2017",
-                                "28 Sep 2017",
-                                "29 Sep 2017",
-                                "03 Oct 2017",
-                                "04 Oct 2017",
-                                "05 Oct 2017",
-                                "06 Oct 2017",
-                                "09 Oct 2017",
-                                "10 Oct 2017",
-                                "11 Oct 2017",
-                                "12 Oct 2017",
-                                "13 Oct 2017",
-                                "16 Oct 2017",
-                                "17 Oct 2017",
-                                "18 Oct 2017",
-                                "19 Oct 2017",
-                                "23 Oct 2017",
-                                "24 Oct 2017",
-                                "25 Oct 2017",
-                                "26 Oct 2017",
-                                "27 Oct 2017",
-                                "30 Oct 2017",
-                                "31 Oct 2017",
-                                "01 Nov 2017",
-                                "02 Nov 2017",
-                                "03 Nov 2017",
-                                "06 Nov 2017",
-                                "07 Nov 2017",
-                                "08 Nov 2017",
-                                "09 Nov 2017",
-                                "10 Nov 2017",
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017"
-                            ]
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Nợ phải trả</h5>
+                <div id="nophaitra"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_no_phai_tra'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
                         }
-                    }
-                    new ApexCharts(document.querySelector("#areaChart"), {
-                        series: [{
-                            name: "STOCK ABC",
-                            data: series.monthDataSeries1.prices
-                        }],
-                        chart: {
-                            type: 'area',
-                            height: 350,
-                            zoom: {
+                        new ApexCharts(document.querySelector("#nophaitra"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
                                 enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
                             }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'straight'
-                        },
-                        subtitle: {
-                            text: 'Price Movements',
-                            align: 'left'
-                        },
-                        labels: series.monthDataSeries1.dates,
-                        xaxis: {
-                            type: 'datetime',
-                        },
-                        yaxis: {
-                            opposite: true
-                        },
-                        legend: {
-                            horizontalAlign: 'left'
-                        }
-                    }).render();
-                });
-            </script>
-            <!-- End Area Chart -->
-
+                        }).render();
+                    });
+                </script>
+            </div>
         </div>
-    </div>
-
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">BVPS cơ bản</h5>
-            <div id="areaChart"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const series = {
-                        "monthDataSeries1": {
-                            "prices": [
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9340.85
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries2": {
-                            "prices": [
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9040.85,
-                                8340.7,
-                                8165.5,
-                                8122.9,
-                                8107.85,
-                                8128.0
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries3": {
-                            "prices": [
-                                7114.25,
-                                7126.6,
-                                7116.95,
-                                7203.7,
-                                7233.75,
-                                7451.0,
-                                7381.15,
-                                7348.95,
-                                7347.75,
-                                7311.25,
-                                7266.4,
-                                7253.25,
-                                7215.45,
-                                7266.35,
-                                7315.25,
-                                7237.2,
-                                7191.4,
-                                7238.95,
-                                7222.6,
-                                7217.9,
-                                7359.3,
-                                7371.55,
-                                7371.15,
-                                7469.2,
-                                7429.25,
-                                7434.65,
-                                7451.1,
-                                7475.25,
-                                7566.25,
-                                7556.8,
-                                7525.55,
-                                7555.45,
-                                7560.9,
-                                7490.7,
-                                7527.6,
-                                7551.9,
-                                7514.85,
-                                7577.95,
-                                7592.3,
-                                7621.95,
-                                7707.95,
-                                7859.1,
-                                7815.7,
-                                7739.0,
-                                7778.7,
-                                7839.45,
-                                7756.45,
-                                7669.2,
-                                7580.45,
-                                7452.85,
-                                7617.25,
-                                7701.6,
-                                7606.8,
-                                7620.05,
-                                7513.85,
-                                7498.45,
-                                7575.45,
-                                7601.95,
-                                7589.1,
-                                7525.85,
-                                7569.5,
-                                7702.5,
-                                7812.7,
-                                7803.75,
-                                7816.3,
-                                7851.15,
-                                7912.2,
-                                7972.8,
-                                8145.0,
-                                8161.1,
-                                8121.05,
-                                8071.25,
-                                8088.2,
-                                8154.45,
-                                8148.3,
-                                8122.05,
-                                8132.65,
-                                8074.55,
-                                7952.8,
-                                7885.55,
-                                7733.9,
-                                7897.15,
-                                7973.15,
-                                7888.5,
-                                7842.8,
-                                7838.4,
-                                7909.85,
-                                7892.75,
-                                7897.75,
-                                7820.05,
-                                7904.4,
-                                7872.2,
-                                7847.5,
-                                7849.55,
-                                7789.6,
-                                7736.35,
-                                7819.4,
-                                7875.35,
-                                7871.8,
-                                8076.5,
-                                8114.8,
-                                8193.55,
-                                8217.1,
-                                8235.05,
-                                8215.3,
-                                8216.4,
-                                8301.55,
-                                8235.25,
-                                8229.75,
-                                8201.95,
-                                8164.95,
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2
-                            ],
-                            "dates": [
-                                "02 Jun 2017",
-                                "05 Jun 2017",
-                                "06 Jun 2017",
-                                "07 Jun 2017",
-                                "08 Jun 2017",
-                                "09 Jun 2017",
-                                "12 Jun 2017",
-                                "13 Jun 2017",
-                                "14 Jun 2017",
-                                "15 Jun 2017",
-                                "16 Jun 2017",
-                                "19 Jun 2017",
-                                "20 Jun 2017",
-                                "21 Jun 2017",
-                                "22 Jun 2017",
-                                "23 Jun 2017",
-                                "27 Jun 2017",
-                                "28 Jun 2017",
-                                "29 Jun 2017",
-                                "30 Jun 2017",
-                                "03 Jul 2017",
-                                "04 Jul 2017",
-                                "05 Jul 2017",
-                                "06 Jul 2017",
-                                "07 Jul 2017",
-                                "10 Jul 2017",
-                                "11 Jul 2017",
-                                "12 Jul 2017",
-                                "13 Jul 2017",
-                                "14 Jul 2017",
-                                "17 Jul 2017",
-                                "18 Jul 2017",
-                                "19 Jul 2017",
-                                "20 Jul 2017",
-                                "21 Jul 2017",
-                                "24 Jul 2017",
-                                "25 Jul 2017",
-                                "26 Jul 2017",
-                                "27 Jul 2017",
-                                "28 Jul 2017",
-                                "31 Jul 2017",
-                                "01 Aug 2017",
-                                "02 Aug 2017",
-                                "03 Aug 2017",
-                                "04 Aug 2017",
-                                "07 Aug 2017",
-                                "08 Aug 2017",
-                                "09 Aug 2017",
-                                "10 Aug 2017",
-                                "11 Aug 2017",
-                                "14 Aug 2017",
-                                "16 Aug 2017",
-                                "17 Aug 2017",
-                                "18 Aug 2017",
-                                "21 Aug 2017",
-                                "22 Aug 2017",
-                                "23 Aug 2017",
-                                "24 Aug 2017",
-                                "28 Aug 2017",
-                                "29 Aug 2017",
-                                "30 Aug 2017",
-                                "31 Aug 2017",
-                                "01 Sep 2017",
-                                "04 Sep 2017",
-                                "05 Sep 2017",
-                                "06 Sep 2017",
-                                "07 Sep 2017",
-                                "08 Sep 2017",
-                                "11 Sep 2017",
-                                "12 Sep 2017",
-                                "13 Sep 2017",
-                                "14 Sep 2017",
-                                "15 Sep 2017",
-                                "18 Sep 2017",
-                                "19 Sep 2017",
-                                "20 Sep 2017",
-                                "21 Sep 2017",
-                                "22 Sep 2017",
-                                "25 Sep 2017",
-                                "26 Sep 2017",
-                                "27 Sep 2017",
-                                "28 Sep 2017",
-                                "29 Sep 2017",
-                                "03 Oct 2017",
-                                "04 Oct 2017",
-                                "05 Oct 2017",
-                                "06 Oct 2017",
-                                "09 Oct 2017",
-                                "10 Oct 2017",
-                                "11 Oct 2017",
-                                "12 Oct 2017",
-                                "13 Oct 2017",
-                                "16 Oct 2017",
-                                "17 Oct 2017",
-                                "18 Oct 2017",
-                                "19 Oct 2017",
-                                "23 Oct 2017",
-                                "24 Oct 2017",
-                                "25 Oct 2017",
-                                "26 Oct 2017",
-                                "27 Oct 2017",
-                                "30 Oct 2017",
-                                "31 Oct 2017",
-                                "01 Nov 2017",
-                                "02 Nov 2017",
-                                "03 Nov 2017",
-                                "06 Nov 2017",
-                                "07 Nov 2017",
-                                "08 Nov 2017",
-                                "09 Nov 2017",
-                                "10 Nov 2017",
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017"
-                            ]
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Nợ ngắn hạn</h5>
+                <div id="nonganhan"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_no_ngan_han'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
                         }
-                    }
-                    new ApexCharts(document.querySelector("#areaChart"), {
-                        series: [{
-                            name: "STOCK ABC",
-                            data: series.monthDataSeries1.prices
-                        }],
-                        chart: {
-                            type: 'area',
-                            height: 350,
-                            zoom: {
+                        new ApexCharts(document.querySelector("#nonganhan"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
                                 enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
                             }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'straight'
-                        },
-                        subtitle: {
-                            text: 'Price Movements',
-                            align: 'left'
-                        },
-                        labels: series.monthDataSeries1.dates,
-                        xaxis: {
-                            type: 'datetime',
-                        },
-                        yaxis: {
-                            opposite: true
-                        },
-                        legend: {
-                            horizontalAlign: 'left'
-                        }
-                    }).render();
-                });
-            </script>
-            <!-- End Area Chart -->
-
+                        }).render();
+                    });
+                </script>
+            </div>
         </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">P/E cơ bản</h5>
-            <div id="areaChart"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const series = {
-                        "monthDataSeries1": {
-                            "prices": [
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9340.85
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries2": {
-                            "prices": [
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9040.85,
-                                8340.7,
-                                8165.5,
-                                8122.9,
-                                8107.85,
-                                8128.0
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries3": {
-                            "prices": [
-                                7114.25,
-                                7126.6,
-                                7116.95,
-                                7203.7,
-                                7233.75,
-                                7451.0,
-                                7381.15,
-                                7348.95,
-                                7347.75,
-                                7311.25,
-                                7266.4,
-                                7253.25,
-                                7215.45,
-                                7266.35,
-                                7315.25,
-                                7237.2,
-                                7191.4,
-                                7238.95,
-                                7222.6,
-                                7217.9,
-                                7359.3,
-                                7371.55,
-                                7371.15,
-                                7469.2,
-                                7429.25,
-                                7434.65,
-                                7451.1,
-                                7475.25,
-                                7566.25,
-                                7556.8,
-                                7525.55,
-                                7555.45,
-                                7560.9,
-                                7490.7,
-                                7527.6,
-                                7551.9,
-                                7514.85,
-                                7577.95,
-                                7592.3,
-                                7621.95,
-                                7707.95,
-                                7859.1,
-                                7815.7,
-                                7739.0,
-                                7778.7,
-                                7839.45,
-                                7756.45,
-                                7669.2,
-                                7580.45,
-                                7452.85,
-                                7617.25,
-                                7701.6,
-                                7606.8,
-                                7620.05,
-                                7513.85,
-                                7498.45,
-                                7575.45,
-                                7601.95,
-                                7589.1,
-                                7525.85,
-                                7569.5,
-                                7702.5,
-                                7812.7,
-                                7803.75,
-                                7816.3,
-                                7851.15,
-                                7912.2,
-                                7972.8,
-                                8145.0,
-                                8161.1,
-                                8121.05,
-                                8071.25,
-                                8088.2,
-                                8154.45,
-                                8148.3,
-                                8122.05,
-                                8132.65,
-                                8074.55,
-                                7952.8,
-                                7885.55,
-                                7733.9,
-                                7897.15,
-                                7973.15,
-                                7888.5,
-                                7842.8,
-                                7838.4,
-                                7909.85,
-                                7892.75,
-                                7897.75,
-                                7820.05,
-                                7904.4,
-                                7872.2,
-                                7847.5,
-                                7849.55,
-                                7789.6,
-                                7736.35,
-                                7819.4,
-                                7875.35,
-                                7871.8,
-                                8076.5,
-                                8114.8,
-                                8193.55,
-                                8217.1,
-                                8235.05,
-                                8215.3,
-                                8216.4,
-                                8301.55,
-                                8235.25,
-                                8229.75,
-                                8201.95,
-                                8164.95,
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2
-                            ],
-                            "dates": [
-                                "02 Jun 2017",
-                                "05 Jun 2017",
-                                "06 Jun 2017",
-                                "07 Jun 2017",
-                                "08 Jun 2017",
-                                "09 Jun 2017",
-                                "12 Jun 2017",
-                                "13 Jun 2017",
-                                "14 Jun 2017",
-                                "15 Jun 2017",
-                                "16 Jun 2017",
-                                "19 Jun 2017",
-                                "20 Jun 2017",
-                                "21 Jun 2017",
-                                "22 Jun 2017",
-                                "23 Jun 2017",
-                                "27 Jun 2017",
-                                "28 Jun 2017",
-                                "29 Jun 2017",
-                                "30 Jun 2017",
-                                "03 Jul 2017",
-                                "04 Jul 2017",
-                                "05 Jul 2017",
-                                "06 Jul 2017",
-                                "07 Jul 2017",
-                                "10 Jul 2017",
-                                "11 Jul 2017",
-                                "12 Jul 2017",
-                                "13 Jul 2017",
-                                "14 Jul 2017",
-                                "17 Jul 2017",
-                                "18 Jul 2017",
-                                "19 Jul 2017",
-                                "20 Jul 2017",
-                                "21 Jul 2017",
-                                "24 Jul 2017",
-                                "25 Jul 2017",
-                                "26 Jul 2017",
-                                "27 Jul 2017",
-                                "28 Jul 2017",
-                                "31 Jul 2017",
-                                "01 Aug 2017",
-                                "02 Aug 2017",
-                                "03 Aug 2017",
-                                "04 Aug 2017",
-                                "07 Aug 2017",
-                                "08 Aug 2017",
-                                "09 Aug 2017",
-                                "10 Aug 2017",
-                                "11 Aug 2017",
-                                "14 Aug 2017",
-                                "16 Aug 2017",
-                                "17 Aug 2017",
-                                "18 Aug 2017",
-                                "21 Aug 2017",
-                                "22 Aug 2017",
-                                "23 Aug 2017",
-                                "24 Aug 2017",
-                                "28 Aug 2017",
-                                "29 Aug 2017",
-                                "30 Aug 2017",
-                                "31 Aug 2017",
-                                "01 Sep 2017",
-                                "04 Sep 2017",
-                                "05 Sep 2017",
-                                "06 Sep 2017",
-                                "07 Sep 2017",
-                                "08 Sep 2017",
-                                "11 Sep 2017",
-                                "12 Sep 2017",
-                                "13 Sep 2017",
-                                "14 Sep 2017",
-                                "15 Sep 2017",
-                                "18 Sep 2017",
-                                "19 Sep 2017",
-                                "20 Sep 2017",
-                                "21 Sep 2017",
-                                "22 Sep 2017",
-                                "25 Sep 2017",
-                                "26 Sep 2017",
-                                "27 Sep 2017",
-                                "28 Sep 2017",
-                                "29 Sep 2017",
-                                "03 Oct 2017",
-                                "04 Oct 2017",
-                                "05 Oct 2017",
-                                "06 Oct 2017",
-                                "09 Oct 2017",
-                                "10 Oct 2017",
-                                "11 Oct 2017",
-                                "12 Oct 2017",
-                                "13 Oct 2017",
-                                "16 Oct 2017",
-                                "17 Oct 2017",
-                                "18 Oct 2017",
-                                "19 Oct 2017",
-                                "23 Oct 2017",
-                                "24 Oct 2017",
-                                "25 Oct 2017",
-                                "26 Oct 2017",
-                                "27 Oct 2017",
-                                "30 Oct 2017",
-                                "31 Oct 2017",
-                                "01 Nov 2017",
-                                "02 Nov 2017",
-                                "03 Nov 2017",
-                                "06 Nov 2017",
-                                "07 Nov 2017",
-                                "08 Nov 2017",
-                                "09 Nov 2017",
-                                "10 Nov 2017",
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017"
-                            ]
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Vốn chủ sở hữu</h5>
+                <div id="vonchusohuu"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_von_chu_so_huu'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
                         }
-                    }
-                    new ApexCharts(document.querySelector("#areaChart"), {
-                        series: [{
-                            name: "STOCK ABC",
-                            data: series.monthDataSeries1.prices
-                        }],
-                        chart: {
-                            type: 'area',
-                            height: 350,
-                            zoom: {
+                        new ApexCharts(document.querySelector("#vonchusohuu"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
                                 enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
                             }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'straight'
-                        },
-                        subtitle: {
-                            text: 'Price Movements',
-                            align: 'left'
-                        },
-                        labels: series.monthDataSeries1.dates,
-                        xaxis: {
-                            type: 'datetime',
-                        },
-                        yaxis: {
-                            opposite: true
-                        },
-                        legend: {
-                            horizontalAlign: 'left'
-                        }
-                    }).render();
-                });
-            </script>
-            <!-- End Area Chart -->
-
+                        }).render();
+                    });
+                </script>
+            </div>
         </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">ROS</h5>
-            <div id="areaChart"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const series = {
-                        "monthDataSeries1": {
-                            "prices": [
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9340.85
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries2": {
-                            "prices": [
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9040.85,
-                                8340.7,
-                                8165.5,
-                                8122.9,
-                                8107.85,
-                                8128.0
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries3": {
-                            "prices": [
-                                7114.25,
-                                7126.6,
-                                7116.95,
-                                7203.7,
-                                7233.75,
-                                7451.0,
-                                7381.15,
-                                7348.95,
-                                7347.75,
-                                7311.25,
-                                7266.4,
-                                7253.25,
-                                7215.45,
-                                7266.35,
-                                7315.25,
-                                7237.2,
-                                7191.4,
-                                7238.95,
-                                7222.6,
-                                7217.9,
-                                7359.3,
-                                7371.55,
-                                7371.15,
-                                7469.2,
-                                7429.25,
-                                7434.65,
-                                7451.1,
-                                7475.25,
-                                7566.25,
-                                7556.8,
-                                7525.55,
-                                7555.45,
-                                7560.9,
-                                7490.7,
-                                7527.6,
-                                7551.9,
-                                7514.85,
-                                7577.95,
-                                7592.3,
-                                7621.95,
-                                7707.95,
-                                7859.1,
-                                7815.7,
-                                7739.0,
-                                7778.7,
-                                7839.45,
-                                7756.45,
-                                7669.2,
-                                7580.45,
-                                7452.85,
-                                7617.25,
-                                7701.6,
-                                7606.8,
-                                7620.05,
-                                7513.85,
-                                7498.45,
-                                7575.45,
-                                7601.95,
-                                7589.1,
-                                7525.85,
-                                7569.5,
-                                7702.5,
-                                7812.7,
-                                7803.75,
-                                7816.3,
-                                7851.15,
-                                7912.2,
-                                7972.8,
-                                8145.0,
-                                8161.1,
-                                8121.05,
-                                8071.25,
-                                8088.2,
-                                8154.45,
-                                8148.3,
-                                8122.05,
-                                8132.65,
-                                8074.55,
-                                7952.8,
-                                7885.55,
-                                7733.9,
-                                7897.15,
-                                7973.15,
-                                7888.5,
-                                7842.8,
-                                7838.4,
-                                7909.85,
-                                7892.75,
-                                7897.75,
-                                7820.05,
-                                7904.4,
-                                7872.2,
-                                7847.5,
-                                7849.55,
-                                7789.6,
-                                7736.35,
-                                7819.4,
-                                7875.35,
-                                7871.8,
-                                8076.5,
-                                8114.8,
-                                8193.55,
-                                8217.1,
-                                8235.05,
-                                8215.3,
-                                8216.4,
-                                8301.55,
-                                8235.25,
-                                8229.75,
-                                8201.95,
-                                8164.95,
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2
-                            ],
-                            "dates": [
-                                "02 Jun 2017",
-                                "05 Jun 2017",
-                                "06 Jun 2017",
-                                "07 Jun 2017",
-                                "08 Jun 2017",
-                                "09 Jun 2017",
-                                "12 Jun 2017",
-                                "13 Jun 2017",
-                                "14 Jun 2017",
-                                "15 Jun 2017",
-                                "16 Jun 2017",
-                                "19 Jun 2017",
-                                "20 Jun 2017",
-                                "21 Jun 2017",
-                                "22 Jun 2017",
-                                "23 Jun 2017",
-                                "27 Jun 2017",
-                                "28 Jun 2017",
-                                "29 Jun 2017",
-                                "30 Jun 2017",
-                                "03 Jul 2017",
-                                "04 Jul 2017",
-                                "05 Jul 2017",
-                                "06 Jul 2017",
-                                "07 Jul 2017",
-                                "10 Jul 2017",
-                                "11 Jul 2017",
-                                "12 Jul 2017",
-                                "13 Jul 2017",
-                                "14 Jul 2017",
-                                "17 Jul 2017",
-                                "18 Jul 2017",
-                                "19 Jul 2017",
-                                "20 Jul 2017",
-                                "21 Jul 2017",
-                                "24 Jul 2017",
-                                "25 Jul 2017",
-                                "26 Jul 2017",
-                                "27 Jul 2017",
-                                "28 Jul 2017",
-                                "31 Jul 2017",
-                                "01 Aug 2017",
-                                "02 Aug 2017",
-                                "03 Aug 2017",
-                                "04 Aug 2017",
-                                "07 Aug 2017",
-                                "08 Aug 2017",
-                                "09 Aug 2017",
-                                "10 Aug 2017",
-                                "11 Aug 2017",
-                                "14 Aug 2017",
-                                "16 Aug 2017",
-                                "17 Aug 2017",
-                                "18 Aug 2017",
-                                "21 Aug 2017",
-                                "22 Aug 2017",
-                                "23 Aug 2017",
-                                "24 Aug 2017",
-                                "28 Aug 2017",
-                                "29 Aug 2017",
-                                "30 Aug 2017",
-                                "31 Aug 2017",
-                                "01 Sep 2017",
-                                "04 Sep 2017",
-                                "05 Sep 2017",
-                                "06 Sep 2017",
-                                "07 Sep 2017",
-                                "08 Sep 2017",
-                                "11 Sep 2017",
-                                "12 Sep 2017",
-                                "13 Sep 2017",
-                                "14 Sep 2017",
-                                "15 Sep 2017",
-                                "18 Sep 2017",
-                                "19 Sep 2017",
-                                "20 Sep 2017",
-                                "21 Sep 2017",
-                                "22 Sep 2017",
-                                "25 Sep 2017",
-                                "26 Sep 2017",
-                                "27 Sep 2017",
-                                "28 Sep 2017",
-                                "29 Sep 2017",
-                                "03 Oct 2017",
-                                "04 Oct 2017",
-                                "05 Oct 2017",
-                                "06 Oct 2017",
-                                "09 Oct 2017",
-                                "10 Oct 2017",
-                                "11 Oct 2017",
-                                "12 Oct 2017",
-                                "13 Oct 2017",
-                                "16 Oct 2017",
-                                "17 Oct 2017",
-                                "18 Oct 2017",
-                                "19 Oct 2017",
-                                "23 Oct 2017",
-                                "24 Oct 2017",
-                                "25 Oct 2017",
-                                "26 Oct 2017",
-                                "27 Oct 2017",
-                                "30 Oct 2017",
-                                "31 Oct 2017",
-                                "01 Nov 2017",
-                                "02 Nov 2017",
-                                "03 Nov 2017",
-                                "06 Nov 2017",
-                                "07 Nov 2017",
-                                "08 Nov 2017",
-                                "09 Nov 2017",
-                                "10 Nov 2017",
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017"
-                            ]
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">EPS của 4 quý gần nhất</h5>
+                <div id="epscua4quygannhat"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_eps_4_quy_gan_nhat'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
                         }
-                    }
-                    new ApexCharts(document.querySelector("#areaChart"), {
-                        series: [{
-                            name: "STOCK ABC",
-                            data: series.monthDataSeries1.prices
-                        }],
-                        chart: {
-                            type: 'area',
-                            height: 350,
-                            zoom: {
+                        new ApexCharts(document.querySelector("#epscua4quygannhat"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
                                 enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
                             }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'straight'
-                        },
-                        subtitle: {
-                            text: 'Price Movements',
-                            align: 'left'
-                        },
-                        labels: series.monthDataSeries1.dates,
-                        xaxis: {
-                            type: 'datetime',
-                        },
-                        yaxis: {
-                            opposite: true
-                        },
-                        legend: {
-                            horizontalAlign: 'left'
-                        }
-                    }).render();
-                });
-            </script>
-            <!-- End Area Chart -->
-
+                        }).render();
+                    });
+                </script>
+            </div>
         </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">ROEA</h5>
-            <div id="areaChart"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const series = {
-                        "monthDataSeries1": {
-                            "prices": [
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9340.85
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries2": {
-                            "prices": [
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9040.85,
-                                8340.7,
-                                8165.5,
-                                8122.9,
-                                8107.85,
-                                8128.0
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries3": {
-                            "prices": [
-                                7114.25,
-                                7126.6,
-                                7116.95,
-                                7203.7,
-                                7233.75,
-                                7451.0,
-                                7381.15,
-                                7348.95,
-                                7347.75,
-                                7311.25,
-                                7266.4,
-                                7253.25,
-                                7215.45,
-                                7266.35,
-                                7315.25,
-                                7237.2,
-                                7191.4,
-                                7238.95,
-                                7222.6,
-                                7217.9,
-                                7359.3,
-                                7371.55,
-                                7371.15,
-                                7469.2,
-                                7429.25,
-                                7434.65,
-                                7451.1,
-                                7475.25,
-                                7566.25,
-                                7556.8,
-                                7525.55,
-                                7555.45,
-                                7560.9,
-                                7490.7,
-                                7527.6,
-                                7551.9,
-                                7514.85,
-                                7577.95,
-                                7592.3,
-                                7621.95,
-                                7707.95,
-                                7859.1,
-                                7815.7,
-                                7739.0,
-                                7778.7,
-                                7839.45,
-                                7756.45,
-                                7669.2,
-                                7580.45,
-                                7452.85,
-                                7617.25,
-                                7701.6,
-                                7606.8,
-                                7620.05,
-                                7513.85,
-                                7498.45,
-                                7575.45,
-                                7601.95,
-                                7589.1,
-                                7525.85,
-                                7569.5,
-                                7702.5,
-                                7812.7,
-                                7803.75,
-                                7816.3,
-                                7851.15,
-                                7912.2,
-                                7972.8,
-                                8145.0,
-                                8161.1,
-                                8121.05,
-                                8071.25,
-                                8088.2,
-                                8154.45,
-                                8148.3,
-                                8122.05,
-                                8132.65,
-                                8074.55,
-                                7952.8,
-                                7885.55,
-                                7733.9,
-                                7897.15,
-                                7973.15,
-                                7888.5,
-                                7842.8,
-                                7838.4,
-                                7909.85,
-                                7892.75,
-                                7897.75,
-                                7820.05,
-                                7904.4,
-                                7872.2,
-                                7847.5,
-                                7849.55,
-                                7789.6,
-                                7736.35,
-                                7819.4,
-                                7875.35,
-                                7871.8,
-                                8076.5,
-                                8114.8,
-                                8193.55,
-                                8217.1,
-                                8235.05,
-                                8215.3,
-                                8216.4,
-                                8301.55,
-                                8235.25,
-                                8229.75,
-                                8201.95,
-                                8164.95,
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2
-                            ],
-                            "dates": [
-                                "02 Jun 2017",
-                                "05 Jun 2017",
-                                "06 Jun 2017",
-                                "07 Jun 2017",
-                                "08 Jun 2017",
-                                "09 Jun 2017",
-                                "12 Jun 2017",
-                                "13 Jun 2017",
-                                "14 Jun 2017",
-                                "15 Jun 2017",
-                                "16 Jun 2017",
-                                "19 Jun 2017",
-                                "20 Jun 2017",
-                                "21 Jun 2017",
-                                "22 Jun 2017",
-                                "23 Jun 2017",
-                                "27 Jun 2017",
-                                "28 Jun 2017",
-                                "29 Jun 2017",
-                                "30 Jun 2017",
-                                "03 Jul 2017",
-                                "04 Jul 2017",
-                                "05 Jul 2017",
-                                "06 Jul 2017",
-                                "07 Jul 2017",
-                                "10 Jul 2017",
-                                "11 Jul 2017",
-                                "12 Jul 2017",
-                                "13 Jul 2017",
-                                "14 Jul 2017",
-                                "17 Jul 2017",
-                                "18 Jul 2017",
-                                "19 Jul 2017",
-                                "20 Jul 2017",
-                                "21 Jul 2017",
-                                "24 Jul 2017",
-                                "25 Jul 2017",
-                                "26 Jul 2017",
-                                "27 Jul 2017",
-                                "28 Jul 2017",
-                                "31 Jul 2017",
-                                "01 Aug 2017",
-                                "02 Aug 2017",
-                                "03 Aug 2017",
-                                "04 Aug 2017",
-                                "07 Aug 2017",
-                                "08 Aug 2017",
-                                "09 Aug 2017",
-                                "10 Aug 2017",
-                                "11 Aug 2017",
-                                "14 Aug 2017",
-                                "16 Aug 2017",
-                                "17 Aug 2017",
-                                "18 Aug 2017",
-                                "21 Aug 2017",
-                                "22 Aug 2017",
-                                "23 Aug 2017",
-                                "24 Aug 2017",
-                                "28 Aug 2017",
-                                "29 Aug 2017",
-                                "30 Aug 2017",
-                                "31 Aug 2017",
-                                "01 Sep 2017",
-                                "04 Sep 2017",
-                                "05 Sep 2017",
-                                "06 Sep 2017",
-                                "07 Sep 2017",
-                                "08 Sep 2017",
-                                "11 Sep 2017",
-                                "12 Sep 2017",
-                                "13 Sep 2017",
-                                "14 Sep 2017",
-                                "15 Sep 2017",
-                                "18 Sep 2017",
-                                "19 Sep 2017",
-                                "20 Sep 2017",
-                                "21 Sep 2017",
-                                "22 Sep 2017",
-                                "25 Sep 2017",
-                                "26 Sep 2017",
-                                "27 Sep 2017",
-                                "28 Sep 2017",
-                                "29 Sep 2017",
-                                "03 Oct 2017",
-                                "04 Oct 2017",
-                                "05 Oct 2017",
-                                "06 Oct 2017",
-                                "09 Oct 2017",
-                                "10 Oct 2017",
-                                "11 Oct 2017",
-                                "12 Oct 2017",
-                                "13 Oct 2017",
-                                "16 Oct 2017",
-                                "17 Oct 2017",
-                                "18 Oct 2017",
-                                "19 Oct 2017",
-                                "23 Oct 2017",
-                                "24 Oct 2017",
-                                "25 Oct 2017",
-                                "26 Oct 2017",
-                                "27 Oct 2017",
-                                "30 Oct 2017",
-                                "31 Oct 2017",
-                                "01 Nov 2017",
-                                "02 Nov 2017",
-                                "03 Nov 2017",
-                                "06 Nov 2017",
-                                "07 Nov 2017",
-                                "08 Nov 2017",
-                                "09 Nov 2017",
-                                "10 Nov 2017",
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017"
-                            ]
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">BVPS cơ bản</h5>
+                <div id="bvpscoban"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_bvps_co_ban'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
                         }
-                    }
-                    new ApexCharts(document.querySelector("#areaChart"), {
-                        series: [{
-                            name: "STOCK ABC",
-                            data: series.monthDataSeries1.prices
-                        }],
-                        chart: {
-                            type: 'area',
-                            height: 350,
-                            zoom: {
+                        new ApexCharts(document.querySelector("#bvpscoban"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
                                 enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
                             }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'straight'
-                        },
-                        subtitle: {
-                            text: 'Price Movements',
-                            align: 'left'
-                        },
-                        labels: series.monthDataSeries1.dates,
-                        xaxis: {
-                            type: 'datetime',
-                        },
-                        yaxis: {
-                            opposite: true
-                        },
-                        legend: {
-                            horizontalAlign: 'left'
-                        }
-                    }).render();
-                });
-            </script>
-            <!-- End Area Chart -->
-
+                        }).render();
+                    });
+                </script>
+            </div>
         </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">ROAA</h5>
-            <div id="areaChart"></div>
-            <script>
-                document.addEventListener("DOMContentLoaded", () => {
-                    const series = {
-                        "monthDataSeries1": {
-                            "prices": [
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9340.85
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries2": {
-                            "prices": [
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2,
-                                8668.95,
-                                8602.3,
-                                8607.55,
-                                8512.9,
-                                8496.25,
-                                8600.65,
-                                8881.1,
-                                9040.85,
-                                8340.7,
-                                8165.5,
-                                8122.9,
-                                8107.85,
-                                8128.0
-                            ],
-                            "dates": [
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017",
-                                "29 Nov 2017",
-                                "30 Nov 2017",
-                                "01 Dec 2017",
-                                "04 Dec 2017",
-                                "05 Dec 2017",
-                                "06 Dec 2017",
-                                "07 Dec 2017",
-                                "08 Dec 2017"
-                            ]
-                        },
-                        "monthDataSeries3": {
-                            "prices": [
-                                7114.25,
-                                7126.6,
-                                7116.95,
-                                7203.7,
-                                7233.75,
-                                7451.0,
-                                7381.15,
-                                7348.95,
-                                7347.75,
-                                7311.25,
-                                7266.4,
-                                7253.25,
-                                7215.45,
-                                7266.35,
-                                7315.25,
-                                7237.2,
-                                7191.4,
-                                7238.95,
-                                7222.6,
-                                7217.9,
-                                7359.3,
-                                7371.55,
-                                7371.15,
-                                7469.2,
-                                7429.25,
-                                7434.65,
-                                7451.1,
-                                7475.25,
-                                7566.25,
-                                7556.8,
-                                7525.55,
-                                7555.45,
-                                7560.9,
-                                7490.7,
-                                7527.6,
-                                7551.9,
-                                7514.85,
-                                7577.95,
-                                7592.3,
-                                7621.95,
-                                7707.95,
-                                7859.1,
-                                7815.7,
-                                7739.0,
-                                7778.7,
-                                7839.45,
-                                7756.45,
-                                7669.2,
-                                7580.45,
-                                7452.85,
-                                7617.25,
-                                7701.6,
-                                7606.8,
-                                7620.05,
-                                7513.85,
-                                7498.45,
-                                7575.45,
-                                7601.95,
-                                7589.1,
-                                7525.85,
-                                7569.5,
-                                7702.5,
-                                7812.7,
-                                7803.75,
-                                7816.3,
-                                7851.15,
-                                7912.2,
-                                7972.8,
-                                8145.0,
-                                8161.1,
-                                8121.05,
-                                8071.25,
-                                8088.2,
-                                8154.45,
-                                8148.3,
-                                8122.05,
-                                8132.65,
-                                8074.55,
-                                7952.8,
-                                7885.55,
-                                7733.9,
-                                7897.15,
-                                7973.15,
-                                7888.5,
-                                7842.8,
-                                7838.4,
-                                7909.85,
-                                7892.75,
-                                7897.75,
-                                7820.05,
-                                7904.4,
-                                7872.2,
-                                7847.5,
-                                7849.55,
-                                7789.6,
-                                7736.35,
-                                7819.4,
-                                7875.35,
-                                7871.8,
-                                8076.5,
-                                8114.8,
-                                8193.55,
-                                8217.1,
-                                8235.05,
-                                8215.3,
-                                8216.4,
-                                8301.55,
-                                8235.25,
-                                8229.75,
-                                8201.95,
-                                8164.95,
-                                8107.85,
-                                8128.0,
-                                8122.9,
-                                8165.5,
-                                8340.7,
-                                8423.7,
-                                8423.5,
-                                8514.3,
-                                8481.85,
-                                8487.7,
-                                8506.9,
-                                8626.2
-                            ],
-                            "dates": [
-                                "02 Jun 2017",
-                                "05 Jun 2017",
-                                "06 Jun 2017",
-                                "07 Jun 2017",
-                                "08 Jun 2017",
-                                "09 Jun 2017",
-                                "12 Jun 2017",
-                                "13 Jun 2017",
-                                "14 Jun 2017",
-                                "15 Jun 2017",
-                                "16 Jun 2017",
-                                "19 Jun 2017",
-                                "20 Jun 2017",
-                                "21 Jun 2017",
-                                "22 Jun 2017",
-                                "23 Jun 2017",
-                                "27 Jun 2017",
-                                "28 Jun 2017",
-                                "29 Jun 2017",
-                                "30 Jun 2017",
-                                "03 Jul 2017",
-                                "04 Jul 2017",
-                                "05 Jul 2017",
-                                "06 Jul 2017",
-                                "07 Jul 2017",
-                                "10 Jul 2017",
-                                "11 Jul 2017",
-                                "12 Jul 2017",
-                                "13 Jul 2017",
-                                "14 Jul 2017",
-                                "17 Jul 2017",
-                                "18 Jul 2017",
-                                "19 Jul 2017",
-                                "20 Jul 2017",
-                                "21 Jul 2017",
-                                "24 Jul 2017",
-                                "25 Jul 2017",
-                                "26 Jul 2017",
-                                "27 Jul 2017",
-                                "28 Jul 2017",
-                                "31 Jul 2017",
-                                "01 Aug 2017",
-                                "02 Aug 2017",
-                                "03 Aug 2017",
-                                "04 Aug 2017",
-                                "07 Aug 2017",
-                                "08 Aug 2017",
-                                "09 Aug 2017",
-                                "10 Aug 2017",
-                                "11 Aug 2017",
-                                "14 Aug 2017",
-                                "16 Aug 2017",
-                                "17 Aug 2017",
-                                "18 Aug 2017",
-                                "21 Aug 2017",
-                                "22 Aug 2017",
-                                "23 Aug 2017",
-                                "24 Aug 2017",
-                                "28 Aug 2017",
-                                "29 Aug 2017",
-                                "30 Aug 2017",
-                                "31 Aug 2017",
-                                "01 Sep 2017",
-                                "04 Sep 2017",
-                                "05 Sep 2017",
-                                "06 Sep 2017",
-                                "07 Sep 2017",
-                                "08 Sep 2017",
-                                "11 Sep 2017",
-                                "12 Sep 2017",
-                                "13 Sep 2017",
-                                "14 Sep 2017",
-                                "15 Sep 2017",
-                                "18 Sep 2017",
-                                "19 Sep 2017",
-                                "20 Sep 2017",
-                                "21 Sep 2017",
-                                "22 Sep 2017",
-                                "25 Sep 2017",
-                                "26 Sep 2017",
-                                "27 Sep 2017",
-                                "28 Sep 2017",
-                                "29 Sep 2017",
-                                "03 Oct 2017",
-                                "04 Oct 2017",
-                                "05 Oct 2017",
-                                "06 Oct 2017",
-                                "09 Oct 2017",
-                                "10 Oct 2017",
-                                "11 Oct 2017",
-                                "12 Oct 2017",
-                                "13 Oct 2017",
-                                "16 Oct 2017",
-                                "17 Oct 2017",
-                                "18 Oct 2017",
-                                "19 Oct 2017",
-                                "23 Oct 2017",
-                                "24 Oct 2017",
-                                "25 Oct 2017",
-                                "26 Oct 2017",
-                                "27 Oct 2017",
-                                "30 Oct 2017",
-                                "31 Oct 2017",
-                                "01 Nov 2017",
-                                "02 Nov 2017",
-                                "03 Nov 2017",
-                                "06 Nov 2017",
-                                "07 Nov 2017",
-                                "08 Nov 2017",
-                                "09 Nov 2017",
-                                "10 Nov 2017",
-                                "13 Nov 2017",
-                                "14 Nov 2017",
-                                "15 Nov 2017",
-                                "16 Nov 2017",
-                                "17 Nov 2017",
-                                "20 Nov 2017",
-                                "21 Nov 2017",
-                                "22 Nov 2017",
-                                "23 Nov 2017",
-                                "24 Nov 2017",
-                                "27 Nov 2017",
-                                "28 Nov 2017"
-                            ]
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">P/E cơ bản</h5>
+                <div id="pecoban"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_pe_co_ban'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
                         }
-                    }
-                    new ApexCharts(document.querySelector("#areaChart"), {
-                        series: [{
-                            name: "STOCK ABC",
-                            data: series.monthDataSeries1.prices
-                        }],
-                        chart: {
-                            type: 'area',
-                            height: 350,
-                            zoom: {
+                        new ApexCharts(document.querySelector("#pecoban"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
                                 enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
                             }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'straight'
-                        },
-                        subtitle: {
-                            text: 'Price Movements',
-                            align: 'left'
-                        },
-                        labels: series.monthDataSeries1.dates,
-                        xaxis: {
-                            type: 'datetime',
-                        },
-                        yaxis: {
-                            opposite: true
-                        },
-                        legend: {
-                            horizontalAlign: 'left'
-                        }
-                    }).render();
-                });
-            </script>
-            <!-- End Area Chart -->
-
+                        }).render();
+                    });
+                </script>
+            </div>
         </div>
-    </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">ROS</h5>
+                <div id="ros"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_ros_co_ban'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
+                        }
+                        new ApexCharts(document.querySelector("#ros"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
+                            }
+                        }).render();
+                    });
+                </script>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">ROEA</h5>
+                <div id="roea"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_roea'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
+                        }
+                        new ApexCharts(document.querySelector("#roea"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
+                            }
+                        }).render();
+                    });
+                </script>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">ROAA</h5>
+                <div id="roaa"></div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                        const series = {
+                            "monthDataSeries1": {
+                                "prices": [
+                                    <?php
+                                    $gia = "";
+                                    $count_tien = 1;
+                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                        $gia = $gia . $info['financial_roaa'][$count_tien] . ",";
+                                        $count_tien++;
+                                    }
+                                    $gia = substr($gia, 0, strlen($gia) - 1);
+                                    echo $gia;
+                                    ?>
+                                ],
+                                "dates": [
+                                    <?php
+                                    $quy = "";
+                                    $count_quy = 1;
+                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                        $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
+                                        $count_quy++;
+                                    }
+                                    $quy = substr($quy, 0, strlen($quy) - 1);
+                                    echo $quy;
+                                    ?>
+                                ]
+                            }
+                        }
+                        new ApexCharts(document.querySelector("#roaa"), {
+                            series: [{
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
+                                data: series.monthDataSeries1.prices
+                            }],
+                            chart: {
+                                type: 'area',
+                                height: 350,
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            stroke: {
+                                curve: 'straight'
+                            },
+                            subtitle: {
+                                text: 'Price Movements',
+                                align: 'left'
+                            },
+                            labels: series.monthDataSeries1.dates,
+                            xaxis: {
+                                type: 'string',
+                            },
+                            yaxis: {
+                                opposite: true
+                            },
+                            legend: {
+                                horizontalAlign: 'left'
+                            }
+                        }).render();
+                    });
+                </script>
+            </div>
+        </div>
+        <?php
+    }
+    ?>
+
+
+
+
 </main>
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
         class="bi bi-arrow-up-short"></i></a>

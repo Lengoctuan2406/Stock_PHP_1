@@ -28,17 +28,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/wamp64/www/Stock_market_PHP_1",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/wamp64/www/Stock_market_PHP_1&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\wamp64\www\Stock_market_PHP_1\assets\files" />
       <recent name="C:\wamp64\www\Stock_market_PHP_1" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -91,7 +92,10 @@
       <workItem from="1673401085961" duration="4982000" />
       <workItem from="1673538037552" duration="1200000" />
       <workItem from="1673663812268" duration="22818000" />
-      <workItem from="1673918017193" duration="5528000" />
+      <workItem from="1673918017193" duration="25326000" />
+      <workItem from="1673945796151" duration="7892000" />
+      <workItem from="1673953999764" duration="1155000" />
+      <workItem from="1673961982255" duration="2073000" />
     </task>
     <servers />
   </component>

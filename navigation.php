@@ -23,44 +23,16 @@
         </li>
         <li class="nav-heading">Thông tin</li>
         <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#information-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-clipboard-plus"></i><span>Thông tin chung</span><i
-                    class="bi bi-chevron-down ms-auto"></i>
+            <a class="nav-link collapsed" href="information_basic.php">
+                <i class="bi bi-clipboard-plus"></i>
+                <span>Thông tin chung</span>
             </a>
-            <ul id="information-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="information_see_all.php">
-                        <i class="bi bi-circle"></i><span>Xem</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="information_update.php">
-                        <i class="bi bi-circle"></i><span>Sửa đổi</span>
-                    </a>
-                </li>
-            </ul>
         </li>
         <li class="nav-item">
-            <a class="nav-link collapsed" data-bs-target="#financial-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-newspaper"></i><span>Báo cáo tài chính</span><i class="bi bi-chevron-down ms-auto"></i>
+            <a class="nav-link collapsed" href="financial_report.php">
+                <i class="bi bi-newspaper"></i>
+                <span>Báo cáo tài chính</span>
             </a>
-            <ul id="financial-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
-                <li>
-                    <a href="financial_report_see_all.php">
-                        <i class="bi bi-circle"></i><span>Xem</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="financial_report_update.php">
-                        <i class="bi bi-circle"></i><span>Sửa đổi</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="financial_report_add.php">
-                        <i class="bi bi-circle"></i><span>Thêm mới</span>
-                    </a>
-                </li>
-            </ul>
         </li>
         <li class="nav-heading">Biểu đồ</li>
         <li class="nav-item">
