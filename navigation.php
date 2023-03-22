@@ -65,11 +65,6 @@
                         <i class="bi bi-circle"></i><span>Canslim</span>
                     </a>
                 </li>
-                <li>
-                    <a href="calculator_4m.php">
-                        <i class="bi bi-circle"></i><span>4M</span>
-                    </a>
-                </li>
             </ul>
         </li>
 <!--        <li class="nav-item">-->

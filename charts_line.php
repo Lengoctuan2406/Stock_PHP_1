@@ -97,6 +97,7 @@ include('database/connect.php');
                         <select name="tunam" class="form-select" id="tunam" aria-label="Từ năm">
                             <option value="2018" selected>2018</option>
                             <option value="2019">2019</option>
+                            <option value="2020">2020</option>
                             <option value="2021">2021</option>
                             <option value="2022">2022</option>
                             <option value="2023">2023</option>
@@ -120,6 +121,7 @@ include('database/connect.php');
                         <select name="dennam" class="form-select" id="nam" aria-label="Đến năm">
                             <option value="2018" selected>2018</option>
                             <option value="2019">2019</option>
+                            <option value="2020">2020</option>
                             <option value="2021">2021</option>
                             <option value="2022">2022</option>
                             <option value="2023">2023</option>
@@ -173,6 +175,28 @@ include('database/connect.php');
                 $GLOBALS['tunam']++;
             }
             $GLOBALS['count_charts']++;
+            if($GLOBALS['tunam'] == $GLOBALS['dennam'] && $GLOBALS['tuquy'] == $GLOBALS['denquy']) {
+                $ret = mysqli_query($_SESSION['con'], "SELECT * FROM financial_reports WHERE enterprise_id='" . $_SESSION['enterprise_id'] . "' AND financial_year='" . $GLOBALS['tunam'] . "' AND financial_quarter='" . $GLOBALS['tuquy'] . "';");
+                $num = mysqli_fetch_array($ret);
+                $info['financial_year'][$GLOBALS['count_charts']] = $num['financial_year'];
+                $info['financial_quarter'][$GLOBALS['count_charts']] = $num['financial_quarter'];
+                $info['financial_doanh_thu_thuan'][$GLOBALS['count_charts']] = $num['financial_doanh_thu_thuan'];
+                $info['financial_loi_nhuan_gop'][$GLOBALS['count_charts']] = $num['financial_loi_nhuan_gop'];
+                $info['financial_loi_nhuan_thuan_tu_hoat_dong_kinh_doanh'][$GLOBALS['count_charts']] = $num['financial_loi_nhuan_thuan_tu_hoat_dong_kinh_doanh'];
+                $info['financial_loi_nhuan_sau_thue_thu_nhap_doanh_nghiep'][$GLOBALS['count_charts']] = $num['financial_loi_nhuan_sau_thue_thu_nhap_doanh_nghiep'];
+                $info['financial_loi_nhuan_sau_thue_cua_co_dong_cong_ty_me'][$GLOBALS['count_charts']] = $num['financial_loi_nhuan_sau_thue_cua_co_dong_cong_ty_me'];
+                $info['financial_tai_san_ngan_han'][$GLOBALS['count_charts']] = $num['financial_tai_san_ngan_han'];
+                $info['financial_tong_tai_san'][$GLOBALS['count_charts']] = $num['financial_tong_tai_san'];
+                $info['financial_no_phai_tra'][$GLOBALS['count_charts']] = $num['financial_no_phai_tra'];
+                $info['financial_no_ngan_han'][$GLOBALS['count_charts']] = $num['financial_no_ngan_han'];
+                $info['financial_von_chu_so_huu'][$GLOBALS['count_charts']] = $num['financial_von_chu_so_huu'];
+                $info['financial_eps_4_quy_gan_nhat'][$GLOBALS['count_charts']] = $num['financial_eps_4_quy_gan_nhat'];
+                $info['financial_bvps_co_ban'][$GLOBALS['count_charts']] = $num['financial_bvps_co_ban'];
+                $info['financial_pe_co_ban'][$GLOBALS['count_charts']] = $num['financial_pe_co_ban'];
+                $info['financial_ros_co_ban'][$GLOBALS['count_charts']] = $num['financial_ros_co_ban'];
+                $info['financial_roea'][$GLOBALS['count_charts']] = $num['financial_roea'];
+                $info['financial_roaa'][$GLOBALS['count_charts']] = $num['financial_roaa'];
+            }
         }
         ?>
         <div class="card">
@@ -187,7 +211,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_doanhthuthuan = 1;
-                                    while ($count_doanhthuthuan != $GLOBALS['count_charts']) {
+                                    while ($count_doanhthuthuan != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_doanh_thu_thuan'][$count_doanhthuthuan] . ",";
                                         $count_doanhthuthuan++;
                                     }
@@ -199,7 +223,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -211,7 +235,7 @@ include('database/connect.php');
                         }
                         new ApexCharts(document.querySelector("#doanhthuthuan"), {
                             series: [{
-                                name: "STOCK ABC",
+                                name: "Mã <?php echo $_SESSION['enterprise_code']; ?>",
                                 data: series.monthDataSeries1.prices
                             }],
                             chart: {
@@ -259,7 +283,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_loi_nhuan_gop'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -271,7 +295,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -330,7 +354,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_loi_nhuan_thuan_tu_hoat_dong_kinh_doanh'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -342,7 +366,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -401,7 +425,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_loi_nhuan_sau_thue_thu_nhap_doanh_nghiep'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -413,7 +437,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -472,7 +496,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_loi_nhuan_sau_thue_cua_co_dong_cong_ty_me'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -484,7 +508,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -543,7 +567,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_tai_san_ngan_han'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -555,7 +579,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -614,7 +638,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_tong_tai_san'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -626,7 +650,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -685,7 +709,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_no_phai_tra'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -697,7 +721,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -756,7 +780,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_no_ngan_han'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -768,7 +792,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -827,7 +851,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_von_chu_so_huu'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -839,7 +863,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -898,7 +922,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_eps_4_quy_gan_nhat'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -910,7 +934,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -969,7 +993,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_bvps_co_ban'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -981,7 +1005,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -1040,7 +1064,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_pe_co_ban'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -1052,7 +1076,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -1111,7 +1135,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_ros_co_ban'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -1123,7 +1147,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -1182,7 +1206,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_roea'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -1194,7 +1218,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }
@@ -1253,7 +1277,7 @@ include('database/connect.php');
                                     <?php
                                     $gia = "";
                                     $count_tien = 1;
-                                    while ($count_tien != $GLOBALS['count_charts']) {
+                                    while ($count_tien != $GLOBALS['count_charts']+1) {
                                         $gia = $gia . $info['financial_roaa'][$count_tien] . ",";
                                         $count_tien++;
                                     }
@@ -1265,7 +1289,7 @@ include('database/connect.php');
                                     <?php
                                     $quy = "";
                                     $count_quy = 1;
-                                    while ($count_quy != $GLOBALS['count_charts']) {
+                                    while ($count_quy != $GLOBALS['count_charts']+1) {
                                         $quy = $quy . "'Quý " . $info['financial_quarter'][$count_quy] . " / " . $info['financial_year'][$count_quy] . "' ,";
                                         $count_quy++;
                                     }

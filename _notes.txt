@@ -14,3 +14,6 @@ function search(str) {
     xmlhttp.send();
   }
 }
+
+
+mysqli_set_charset($conn, 'UTF8');//chuyển sang chữ tiếng việt

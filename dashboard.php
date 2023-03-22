@@ -35,6 +35,7 @@ function dauphay($number)
             <div class="col-lg-8">
                 <div class="row">
                     <?php
+                    mysqli_set_charset($_SESSION['con'], 'UTF8');
                     $ret = mysqli_query($_SESSION['con'], "SELECT * FROM enterprises WHERE enterprise_id='" . $_SESSION['enterprise_id'] . "';");
                     $num = mysqli_fetch_array($ret);
                     if ($num > 0) {
@@ -119,9 +120,9 @@ function dauphay($number)
                         </div>
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-body">
+                                <div class="card-body" style="font-family: 'Times New Roman'">
                                     <h5 class="card-title">Mô tả doanh nghiệp</h5>
-                                    <?php echo htmlentities($num['enterprise_tong_quan']); ?>
+                                    <?php echo html_entity_decode($num['enterprise_tong_quan']); ?>
                                 </div>
                             </div>
                         </div>
@@ -145,7 +146,7 @@ function dauphay($number)
                             </div>
 
                             <div class="card-body">
-                                <h5 class="card-title">Reports <span>/Today</span></h5>
+                                <h5 class="card-title">Tổng quan</h5>
 
                                 <!-- Line Chart -->
                                 <div id="reportsChart"></div>

@@ -21,7 +21,8 @@ include('handling/handling_predict.php');
 
     <div class="card">
         <div class="card-body" style="margin-top: 20px;">
-            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"  enctype="multipart/form-data">
+            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"
+                  enctype="multipart/form-data">
                 <div class="row mb-3">
                     <label for="inputNumber" class="col-sm-2 col-form-label">Thêm file csv</label>
                     <div class="col-sm-10">
@@ -38,7 +39,8 @@ include('handling/handling_predict.php');
     </div>
     <div class="card">
         <div class="card-body" style="margin-top: 20px;">
-            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"  enctype="multipart/form-data">
+            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"
+                  enctype="multipart/form-data">
                 <div class="row mb-3">
                     <label for="inputNumber" class="col-sm-4 col-form-label">Nhập số lượng ngày muốn dự đoán:</label>
                     <div class="col-sm-8">
@@ -66,12 +68,18 @@ include('handling/handling_predict.php');
                                 // đọc file csv để vẽ biểu đồ
                                 $file = fopen("assets/files/dudoan.csv", "r");
                                 $gia = "";
+                                $gia1 = "";
                                 fgetcsv($file);
                                 while ($csv = fgetcsv($file)) {
                                     $gia = $gia . "$csv[1],";
                                 }
                                 $gia = substr($gia, 0, strlen($gia) - 1);
-                                echo $gia;
+                                $cat = explode(",", $gia);
+                                for ($i = count($cat); $i >= count($cat) - 50; $i--) {
+                                    $gia1 = "$cat[$i]," . $gia1;
+                                }
+                                $gia1 = substr($gia1, 0, strlen($gia1) - 1);
+                                echo $gia1;
                                 fclose($file);
                                 ?>],
                             "dates": [
@@ -79,12 +87,18 @@ include('handling/handling_predict.php');
                                 // đọc file csv để vẽ biểu đồ
                                 $file = fopen("assets/files/dudoan.csv", "r");
                                 $gia = "";
+                                $gia1 = "";
                                 fgetcsv($file);
                                 while ($csv = fgetcsv($file)) {
                                     $gia = $gia . "'$csv[0]',";
                                 }
                                 $gia = substr($gia, 0, strlen($gia) - 1);
-                                echo $gia;
+                                $cat = explode(",", $gia);
+                                for ($i = count($cat); $i >= count($cat) - 50; $i--) {
+                                    $gia1 = "$cat[$i]," . $gia1;
+                                }
+                                $gia1 = substr($gia1, 0, strlen($gia1) - 1);
+                                echo $gia1;
                                 fclose($file);
                                 ?>
                             ]
@@ -115,7 +129,7 @@ include('handling/handling_predict.php');
                         },
                         labels: series.monthDataSeries1.dates,
                         xaxis: {
-                            type: 'datetime'
+                            type: 'string'
                         },
                         yaxis: {
                             opposite: true
@@ -131,7 +145,7 @@ include('handling/handling_predict.php');
 
 </main>
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-        class="bi bi-arrow-up-short"></i></a>
+            class="bi bi-arrow-up-short"></i></a>
 <?php include('_footer.php'); ?>
 </body>
 </html>

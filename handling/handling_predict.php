@@ -1,10 +1,10 @@
 <?php
 if (isset($_POST['dudoan'])) {
-    $myfile = fopen("assets/files/code_model.py", "r") or die("Không thể mở file!");
+    $myfile = fopen("Assets/files/code_model.py", "r") or die("Không thể mở file!");
     //đọc file csv ra
-    $tring = fread($myfile, filesize("assets/files/code_model.py"));
+    $tring = fread($myfile, filesize("Assets/files/code_model.py"));
 
-    $file = fopen("assets/files/" . $_SESSION['file_name'], "r");
+    $file = fopen("Assets/files/" . $_SESSION['file_name'], "r");
     $date = "";
     fgetcsv($file);
     while ($csv = fgetcsv($file)) {
@@ -24,11 +24,11 @@ if (isset($_POST['dudoan'])) {
 
     fclose($myfile);
     //gán lại file và chạy dự đoán
-    $myfile_replace = fopen("assets/files/handling.py", "w") or die("Không thể mở file!");
+    $myfile_replace = fopen("Assets/files/handling.py", "w") or die("Không thể mở file!");
     fwrite($myfile_replace, $tring);
     fclose($myfile_replace);
 
-    $command = escapeshellcmd('assets/files/handling.py');
+    $command = escapeshellcmd('python handling.py');
     shell_exec($command);
 }
 if (isset($_POST['add_csv'])) {
@@ -36,7 +36,7 @@ if (isset($_POST['add_csv'])) {
     if (isset($_FILES["fileupload"]["name"])) {
         if (strlen($_FILES["fileupload"]["name"]) != 0) {
             //Vị trí file lưu tạm
-            $target_dir = "assets/files/";
+            $target_dir = "Assets/files/";
             $target_file = $target_dir . basename($_FILES["fileupload"]["name"]);
             $_SESSION['file_name'] = basename($_FILES["fileupload"]["name"]);
 

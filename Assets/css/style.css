@@ -4,7 +4,25 @@
 * Author: BootstrapMade.com
 * License: https://bootstrapmade.com/license/
 */
+.table1 {
+  width: 90%;
+  margin-left: 20px;
+  margin-top: 20px;
+  text-align: center;
+}
+.title {
+  width: 5%;
+  text-align: center;
+}
 
+.num {
+  width: 5%;
+  text-align: center;
+}
+.calculator {
+  width: 2%;
+  text-align: center;
+}
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
